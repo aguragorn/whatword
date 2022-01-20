@@ -1,6 +1,6 @@
-package com.aguragorn.whatword.keyboard.ui.model
+package com.aguragorn.whatword.core.keyboard.model
 
-class Key(
+class Letter(
     val char: Char,
     var status: Status = Status.UNKNOWN,
 ) {

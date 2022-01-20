@@ -4,12 +4,8 @@ plugins {
     id("kotlin-android-extensions")
 }
 
-group = "com.aguragorn"
+group = "com.aguragorn.whatword"
 version = "1.0"
-
-repositories {
-    mavenCentral()
-}
 
 kotlin {
     /* Targets configuration omitted. 
@@ -29,9 +25,7 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                api(project(":core"))
                 implementation(kotlin("stdlib-common"))
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0")
             }
         }
         val commonTest by getting {
@@ -41,27 +35,11 @@ kotlin {
             }
         }
 
-        val androidMain by getting {
-            dependencies {
-                api("androidx.appcompat:appcompat:1.4.1")
-                api("androidx.core:core-ktx:1.7.0")
-            }
-        }
-        val androidTest by getting {
-            dependencies {
-                implementation("junit:junit:4.13")
-            }
-        }
+        val androidMain by getting
 
-        val desktopMain by getting {
+        val desktopMain by getting
 
-        }
-        val desktopTest by getting {
-
-        }
-        val jsMain by getting {
-
-        }
+        val jsMain by getting
     }
 }
 

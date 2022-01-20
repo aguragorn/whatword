@@ -10,7 +10,7 @@ buildscript {
     }
 }
 
-group = "com.aguragorn"
+group = "com.aguragorn.whatword"
 version = "1.0"
 
 allprojects {
