@@ -1,4 +1,4 @@
-# whatword
+# WhatWord
 Unlocking clues every turn, you have 6 tries to guess that mystery word.
 
 ## Game Rules
