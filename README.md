@@ -17,3 +17,4 @@ Unlocking clues every turn, you have 6 tries to guess that mystery word.
 - **`web`** - web app, includes compose ui for web
 - **`keyboard`** - keyboard behavior
 - **`grid`** - grid behavior
+- **`validator`** - validation logic
