@@ -2,6 +2,7 @@ plugins {
     kotlin("multiplatform")
     id("com.android.library")
     id("kotlin-android-extensions")
+    id("com.aguragorn.optins")
 }
 
 group = "com.aguragorn.whatword"
