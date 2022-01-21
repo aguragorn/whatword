@@ -38,10 +38,10 @@ class GridViewModel(
 
     fun onWordValidated(word: Word) {
         val words = mutableWords()
-        val validatedLetters = word.letters.associateBy { it.char }
+        val validatedLetters = word.letters
 
-        for (letter in words.last().letters) {
-            validatedLetters[letter.char]?.let { letter.status = it.status }
+        for ((i, letter) in words.last().letters.withIndex()) {
+            letter.status = validatedLetters[i].status
         }
 
         updateWords(words)
