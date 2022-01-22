@@ -18,3 +18,4 @@ Unlocking clues every turn, you have 6 tries to guess that mystery word.
 - **`keyboard`** - keyboard behavior
 - **`grid`** - grid behavior
 - **`validator`** - validation logic
+- **`game`** - main game logic
