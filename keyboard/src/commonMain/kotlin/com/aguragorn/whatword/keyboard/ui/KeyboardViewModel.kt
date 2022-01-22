@@ -2,7 +2,9 @@ package com.aguragorn.whatword.keyboard.ui
 
 import com.aguragorn.whatword.core.keyboard.model.Letter
 import com.aguragorn.whatword.core.keyboard.model.Letter.Status
-import com.aguragorn.whatword.keyboard.ui.com.aguragorn.whatword.keyboard.model.Event
+import com.aguragorn.whatword.keyboard.model.Event
+import com.aguragorn.whatword.keyboard.model.KeyLayout
+import com.aguragorn.whatword.keyboard.model.QwertyLayout
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel.Factory.UNLIMITED
@@ -13,8 +15,8 @@ import kotlin.coroutines.CoroutineContext
 class KeyboardViewModel : CoroutineScope {
     override val coroutineContext: CoroutineContext = Dispatchers.Default
 
-    private val _keys = MutableStateFlow(listOf<Letter>())
-    val keys: StateFlow<List<Letter>> = _keys.asStateFlow()
+    private val _keys = MutableStateFlow(QwertyLayout())
+    val keys: StateFlow<KeyLayout> = _keys.asStateFlow()
 
     private val _events = MutableSharedFlow<Event>(extraBufferCapacity = UNLIMITED)
     val events: SharedFlow<Event> = _events.asSharedFlow()
@@ -23,9 +25,9 @@ class KeyboardViewModel : CoroutineScope {
         val statuses = letters
             .groupBy { it.char }
             .mapValues { (_, value) -> value.map { it.status } }
-        val validatedKeys = _keys.value.toList()
+        val validatedKeys = _keys.value.letters
 
-        for (key in validatedKeys) {
+        for (key in validatedKeys.flatten()) {
             val keyChar = key.char
 
             key.status = when {
@@ -39,10 +41,11 @@ class KeyboardViewModel : CoroutineScope {
         // TODO: Remember keys state
 
         // force subscribers of [keys] to be updated
-        _keys.value = validatedKeys
+        _keys.value = KeyLayout(validatedKeys)
     }
 
     fun onKeyTapped(letter: Letter) = launch(coroutineContext) {
+        println(letter.char)
         _events.tryEmit(Event.KeyTapped(letter))
     }
 }

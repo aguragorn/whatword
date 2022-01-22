@@ -7,4 +7,9 @@ class Letter(
     enum class Status {
         CORRECT, MISPLACED, INCORRECT, UNKNOWN
     }
+
+    companion object {
+        val deleteChar: Char = '<'
+        val enterChar: Char = '⏎'
+    }
 }

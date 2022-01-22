@@ -2,8 +2,8 @@ package com.aguragorn.whatword.game.ui
 
 import com.aguragorn.whatword.core.keyboard.model.Letter
 import com.aguragorn.whatword.grid.ui.GridViewModel
+import com.aguragorn.whatword.keyboard.model.Event.KeyTapped
 import com.aguragorn.whatword.keyboard.ui.KeyboardViewModel
-import com.aguragorn.whatword.keyboard.ui.com.aguragorn.whatword.keyboard.model.Event.KeyTapped
 import com.aguragorn.whatword.validator.usecase.ValidateWord
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

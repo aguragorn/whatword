@@ -23,6 +23,12 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
+                implementation(project(":core"))
+                implementation(project(":keyboard"))
+                implementation(project(":grid"))
+                implementation(project(":validator"))
+                implementation(project(":game"))
+
                 implementation(kotlin("stdlib-common"))
             }
         }
