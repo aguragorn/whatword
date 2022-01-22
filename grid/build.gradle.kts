@@ -29,20 +29,18 @@ kotlin {
                 implementation(project(":core"))
 
                 implementation(kotlin("stdlib-common"))
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${com.aguragorn.Versions.coroutines}")
             }
         }
         val commonTest by getting {
             dependencies {
-                implementation(kotlin("test-common"))
-                implementation(kotlin("test-annotations-common"))
+                implementation(kotlin("test"))
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:${com.aguragorn.Versions.coroutines}")
             }
         }
 
         val androidMain by getting
-
         val desktopMain by getting
-
         val jsMain by getting
     }
 }
