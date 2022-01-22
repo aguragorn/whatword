@@ -11,7 +11,7 @@ group = "com.aguragorn.whatword"
 version = "1.0"
 
 dependencies {
-    implementation(project(":common-ui"))
+    implementation(project(":ui:common-ui"))
     implementation("androidx.activity:activity-compose:1.4.0")
 }
 

@@ -10,10 +10,10 @@ pluginManagement {
 rootProject.name = "WhatWord"
 
 
-include(":android")
-include(":desktop")
-include(":common-ui")
-include("web")
+include("ui:android")
+include("ui:desktop")
+include("ui:common-ui")
+include("ui:web")
 include("keyboard")
 include("core")
 include("grid")
