@@ -1,7 +1,10 @@
 plugins {
+    kotlin("android")
     id("org.jetbrains.compose") version "1.0.1"
     id("com.android.application")
-    kotlin("android")
+    id("com.aguragorn.androidconfig")
+    id("com.aguragorn.optins")
+//    id("com.aguragorn.optins")
 }
 
 group = "com.aguragorn.whatword"
@@ -13,21 +16,9 @@ dependencies {
 }
 
 android {
-    compileSdkVersion(31)
     defaultConfig {
         applicationId = "com.aguragorn.whatword.android"
-        minSdkVersion(24)
-        targetSdkVersion(31)
         versionCode = 1
         versionName = "1.0"
-    }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-    }
-    buildTypes {
-        getByName("release") {
-            isMinifyEnabled = false
-        }
     }
 }

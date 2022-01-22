@@ -4,11 +4,11 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.getByType
 import org.gradle.kotlin.dsl.invoke
-import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
+import org.jetbrains.kotlin.gradle.dsl.KotlinProjectExtension
 
-open class OptIn : Plugin<Project> {
+open class OptIns : Plugin<Project> {
     override fun apply(target: Project) {
-        target.extensions.getByType<KotlinMultiplatformExtension>().run {
+        target.extensions.getByType<KotlinProjectExtension>().run {
             sourceSets {
                 all {
                     languageSettings.optIn("kotlin.RequiresOptIn")
@@ -16,5 +16,4 @@ open class OptIn : Plugin<Project> {
             }
         }
     }
-
 }
