@@ -13,13 +13,15 @@ class GridViewModel(
     private val _words = MutableStateFlow(listOf<Word>())
     val words: StateFlow<List<Word>> = _words.asStateFlow()
 
+    val lastWord: Word get() = words.value.lastOrNull() ?: Word()
+
     private fun mutableWords() = _words.value.toMutableList()
 
     private fun updateWords(words: List<Word>) {
         _words.value = words
     }
 
-    fun onLetterPressed(letter: Letter) {
+    fun addLetterToGrid(letter: Letter) {
         val words = mutableWords()
 
         if (words.lastOrNull()?.letters?.size == wordLength) return
@@ -30,7 +32,7 @@ class GridViewModel(
         updateWords(words)
     }
 
-    fun onDelete() {
+    fun deleteLastLetter() {
         val words = mutableWords()
         words.last().letters.removeLastOrNull()
         updateWords(words)

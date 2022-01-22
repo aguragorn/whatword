@@ -7,12 +7,14 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class ValidateWord : CoroutineScope {
+class ValidateWord(
+    private var wordLength: Int = 5,
+    private var mysteryWord: String = "rated"
+) : CoroutineScope {
     override val coroutineContext = Dispatchers.Default
 
     suspend operator fun invoke(
-        attempt: Word,
-        mysteryWord: String
+        attempt: Word
     ): Word = withContext(coroutineContext) {
         val mysteryLetters = mysteryWord.toList()
 

@@ -26,8 +26,8 @@ class ValidateWordTest {
             )
         )
 
-        val validateWord = ValidateWord()
-        val validatedWord = validateWord(word, mysteryWord)
+        val validateWord = ValidateWord(mysteryWord = mysteryWord)
+        val validatedWord = validateWord(word)
 
         assertEquals(Letter.Status.CORRECT, validatedWord.letters[0].status)
         assertEquals(Letter.Status.CORRECT, validatedWord.letters[1].status)
@@ -48,8 +48,8 @@ class ValidateWordTest {
             )
         )
 
-        val validateWord = ValidateWord()
-        val validatedWord = validateWord(word, mysteryWord)
+        val validateWord = ValidateWord(mysteryWord = mysteryWord)
+        val validatedWord = validateWord(word)
 
         assertEquals(Letter.Status.INCORRECT, validatedWord.letters[5].status)
     }
@@ -68,8 +68,8 @@ class ValidateWordTest {
             )
         )
 
-        val validateWord = ValidateWord()
-        val validatedWord = validateWord(word, mysteryWord)
+        val validateWord = ValidateWord(mysteryWord = mysteryWord)
+        val validatedWord = validateWord(word)
 
         assertEquals(Letter.Status.MISPLACED, validatedWord.letters[2].status)
         assertEquals(Letter.Status.MISPLACED, validatedWord.letters[3].status)
@@ -100,22 +100,22 @@ class ValidateWordTest {
         )
         val empty = Word()
 
-        val validate = ValidateWord()
+        val validate = ValidateWord(mysteryWord = mysteryWord)
 
         try {
-            validate(shorter, mysteryWord)
+            validate(shorter)
             fail("validate did not throw on shorter attempt")
         } catch (e: IncorrectLengthException) {
         }
 
         try {
-            validate(longer, mysteryWord)
+            validate(longer)
             fail("validate did not throw on longer attempt")
         } catch (e: IncorrectLengthException) {
         }
 
         try {
-            validate(empty, mysteryWord)
+            validate(empty)
             fail("validate did not throw on empty attempt")
         } catch (e: IncorrectLengthException) {
         }
