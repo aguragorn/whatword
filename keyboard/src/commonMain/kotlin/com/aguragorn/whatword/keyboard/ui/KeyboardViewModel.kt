@@ -12,10 +12,12 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
 
-class KeyboardViewModel : CoroutineScope {
+class KeyboardViewModel(
+    keyLayout: KeyLayout = QwertyLayout()
+) : CoroutineScope {
     override val coroutineContext: CoroutineContext = Dispatchers.Default
 
-    private val _keys = MutableStateFlow(QwertyLayout())
+    private val _keys = MutableStateFlow(keyLayout)
     val keys: StateFlow<KeyLayout> = _keys.asStateFlow()
 
     private val _events = MutableSharedFlow<Event>(extraBufferCapacity = UNLIMITED)

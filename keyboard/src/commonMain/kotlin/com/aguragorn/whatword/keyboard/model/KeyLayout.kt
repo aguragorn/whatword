@@ -8,9 +8,9 @@ class KeyLayout(
 
 fun QwertyLayout(): KeyLayout = KeyLayout(
     listOf(
-        "quertyuiop".map { Letter(it) },
-        "asdfghjkl".map { Letter(it) },
-        "${Letter.enterChar}zxcvbnm${Letter.deleteChar}".map { Letter(it) }
+        "QWERTYUIOP".map { Letter(it) },
+        "ASDFGHJKL".map { Letter(it) },
+        "${Letter.enterChar}ZXCVBNM${Letter.deleteChar}".map { Letter(it) }
     )
 )
 
