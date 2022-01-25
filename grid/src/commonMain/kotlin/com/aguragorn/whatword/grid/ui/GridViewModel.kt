@@ -7,25 +7,24 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 class GridViewModel(
-    private val wordLength: Int = 5,
-    private val maxTurnCount: Int = 6,
+    val wordLength: Int = 5,
+    val maxTurnCount: Int = 6,
 ) {
     private val _words = MutableStateFlow(listOf<Word>())
     val words: StateFlow<List<Word>> = _words.asStateFlow()
 
-    val lastWord: Word get() = words.value.lastOrNull() ?: Word()
+    val lastWord: Word get() = words.value.lastOrNull()?.copy() ?: Word()
 
-    private fun mutableWords() = _words.value.toMutableList()
+    private fun mutableWords() = _words.value.map { it.copy() }.toMutableList()
 
     private fun updateWords(words: List<Word>) {
         _words.value = words
     }
 
     fun addLetterToGrid(letter: Letter) {
+        if (lastWord.letters.size == wordLength) return
+
         val words = mutableWords()
-
-        if (words.lastOrNull()?.letters?.size == wordLength) return
-
         if (words.isEmpty()) words.add(Word())
 
         words.last().letters.add(letter)
@@ -33,6 +32,7 @@ class GridViewModel(
     }
 
     fun deleteLastLetter() {
+        if (lastWord.letters.isEmpty()) return
         val words = mutableWords()
         words.last().letters.removeLastOrNull()
         updateWords(words)

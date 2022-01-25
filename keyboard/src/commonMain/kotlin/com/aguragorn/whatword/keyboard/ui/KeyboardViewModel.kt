@@ -47,7 +47,6 @@ class KeyboardViewModel(
     }
 
     fun onKeyTapped(letter: Letter) = launch(coroutineContext) {
-        println(letter.char)
         _events.tryEmit(Event.KeyTapped(letter))
     }
 }

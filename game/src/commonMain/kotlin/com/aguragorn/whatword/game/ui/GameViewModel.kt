@@ -6,6 +6,7 @@ import com.aguragorn.whatword.keyboard.model.Event.KeyTapped
 import com.aguragorn.whatword.keyboard.model.KeyLayout
 import com.aguragorn.whatword.keyboard.model.QwertyLayout
 import com.aguragorn.whatword.keyboard.ui.KeyboardViewModel
+import com.aguragorn.whatword.validator.model.IncorrectLengthException
 import com.aguragorn.whatword.validator.usecase.ValidateWord
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -43,11 +44,17 @@ class GameViewModel(
             Letter.enterChar -> performValidation()
             else -> grid.value.addLetterToGrid(letter)
         }
-        grid.value.addLetterToGrid(letter)
     }
 
     private fun performValidation() = launch {
-        validate(grid.value.lastWord)
+        try {
+            val validatedWord = validate(grid.value.lastWord)
+
+            keyboard.value.updateKeys(validatedWord.letters)
+            grid.value.onWordValidated(validatedWord)
+        } catch (e: IncorrectLengthException) {
+            // TODO: Show error
+        }
     }
 
     private suspend fun listenToEvents(keyboardViewModel: KeyboardViewModel) {
