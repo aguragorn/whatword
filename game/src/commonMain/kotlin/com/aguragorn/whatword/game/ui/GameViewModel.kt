@@ -3,6 +3,8 @@ package com.aguragorn.whatword.game.ui
 import com.aguragorn.whatword.core.keyboard.model.Letter
 import com.aguragorn.whatword.grid.ui.GridViewModel
 import com.aguragorn.whatword.keyboard.model.Event.KeyTapped
+import com.aguragorn.whatword.keyboard.model.KeyLayout
+import com.aguragorn.whatword.keyboard.model.QwertyLayout
 import com.aguragorn.whatword.keyboard.ui.KeyboardViewModel
 import com.aguragorn.whatword.validator.usecase.ValidateWord
 import kotlinx.coroutines.CoroutineScope
@@ -15,15 +17,16 @@ import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
 
 class GameViewModel(
-    private val wordLength: Int = 5,
-    private val maxTurnCount: Int = 6,
+    wordLength: Int = 5,
+    maxTurnCount: Int = 6,
+    keyLayout: KeyLayout = QwertyLayout(),
 ) : CoroutineScope {
     override val coroutineContext: CoroutineContext = Dispatchers.Main
 
     private val _grid = MutableStateFlow(GridViewModel(wordLength, maxTurnCount))
     val grid: StateFlow<GridViewModel> = _grid.asStateFlow()
 
-    private val _keyboard = MutableStateFlow(KeyboardViewModel())
+    private val _keyboard = MutableStateFlow(KeyboardViewModel(keyLayout))
     val keyboard: StateFlow<KeyboardViewModel> = _keyboard.asStateFlow()
 
     private val validate = ValidateWord(wordLength)
@@ -36,8 +39,8 @@ class GameViewModel(
 
     private fun onLetterTapped(letter: Letter) {
         when (letter.char) {
-            '<', '>' -> grid.value.deleteLastLetter()
-            '\n' -> performValidation()
+            Letter.deleteChar -> grid.value.deleteLastLetter()
+            Letter.enterChar -> performValidation()
             else -> grid.value.addLetterToGrid(letter)
         }
         grid.value.addLetterToGrid(letter)

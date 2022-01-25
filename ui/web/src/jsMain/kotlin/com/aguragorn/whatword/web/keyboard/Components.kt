@@ -16,11 +16,14 @@ fun Keyboard(keyboardViewModel: KeyboardViewModel) {
     val keys = keyboardViewModel.keys.collectAsState(Dispatchers.Main)
 
     Div(attrs = {
+        id("keyboard")
         style {
+            display(DisplayStyle.InlineBlock)
             alignContent(AlignContent.Center)
+            marginBottom(8.px)
         }
     }) {
-        for ((rowIndex, row) in keys.value.letters.withIndex()) {
+        for (row in keys.value.letters) {
             Div(
                 attrs = {
                     style {
@@ -28,7 +31,7 @@ fun Keyboard(keyboardViewModel: KeyboardViewModel) {
                         alignContent(AlignContent.Center)
                         alignItems(AlignItems.Center)
                         justifyContent(JustifyContent.Center)
-                        if (rowIndex > 0) marginTop(8.px)
+                        marginBottom(8.px)
                     }
                 }
             ) {
@@ -52,10 +55,14 @@ fun Key(
     keyboardViewModel: KeyboardViewModel,
     style: StyleBuilder.() -> Unit = {},
 ) {
+    val keyHeight = 56.px
+    val keyWidth = if (letter.isControlChar) 56.px else 40.px
+
     Div(attrs = {
+        id("key")
         style {
-            width(if (letter.isControlChar) 55.px else 40.px)
-            height(55.px)
+            width(keyWidth)
+            height(keyHeight)
             borderRadius(4.px)
             backgroundColor(rgba(0, 0, 0, 0.15))
             textAlign("center")
@@ -63,7 +70,7 @@ fun Key(
             alignContent(AlignContent.Center)
             alignItems(AlignItems.Center)
             justifyContent(JustifyContent.Center)
-            lineHeight(55.px)
+            lineHeight(keyHeight)
             fontFamily("sans-serif")
             fontSize(1.6.em)
 
@@ -92,6 +99,5 @@ fun ControlChar(letter: Letter) {
                 width(40.px)
                 height(auto)
             }
-        }
-    )
+        })
 }

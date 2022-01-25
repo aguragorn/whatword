@@ -1,15 +1,17 @@
 package com.aguragorn.whatword.web
 
-import com.aguragorn.whatword.keyboard.ui.KeyboardViewModel
-import com.aguragorn.whatword.web.keyboard.Keyboard
-import kotlinx.browser.window
+import com.aguragorn.whatword.web.app.ScreenSize
+import com.aguragorn.whatword.web.app.Spacer
+import com.aguragorn.whatword.web.app.screenSize
+import com.aguragorn.whatword.web.game.Game
+import org.jetbrains.compose.web.ExperimentalComposeWebApi
 import org.jetbrains.compose.web.renderComposable
 
+@OptIn(ExperimentalComposeWebApi::class)
 fun main() {
-    val keyboard = KeyboardViewModel()
-    println(window.screen.availWidth)
-
     renderComposable(rootElementId = "root") {
-        Keyboard(keyboard)
+        if (screenSize() != ScreenSize.SMALL) Spacer()
+        Game()
+        if (screenSize() != ScreenSize.SMALL) Spacer()
     }
 }
