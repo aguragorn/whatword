@@ -5,6 +5,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import com.aguragorn.whatword.core.keyboard.model.Letter
 import com.aguragorn.whatword.keyboard.ui.KeyboardViewModel
+import com.aguragorn.whatword.web.theme.appTheme
 import kotlinx.coroutines.Dispatchers
 import org.jetbrains.compose.web.css.*
 import org.jetbrains.compose.web.css.keywords.auto
@@ -56,6 +57,7 @@ fun Key(
     keyboardViewModel: KeyboardViewModel,
     style: StyleBuilder.() -> Unit = {},
 ) {
+    val theme by appTheme.collectAsState()
     val keyHeight = 56.px
     val keyWidth = if (letter.isControlChar) 56.px else 40.px
 
@@ -65,7 +67,8 @@ fun Key(
             width(keyWidth)
             height(keyHeight)
             borderRadius(4.px)
-            backgroundColor(rgba(0, 0, 0, 0.15))
+            color(theme.keyForegroundColorFor(letter.status))
+            backgroundColor(theme.keyColorFor(letter.status))
             textAlign("center")
             display(DisplayStyle.Flex)
             alignContent(AlignContent.Center)
@@ -74,6 +77,8 @@ fun Key(
             lineHeight(keyHeight)
             fontFamily("sans-serif")
             fontSize(1.6.em)
+
+            // TODO: apply status colors
 
             // apply style-overrides set by caller
             style()

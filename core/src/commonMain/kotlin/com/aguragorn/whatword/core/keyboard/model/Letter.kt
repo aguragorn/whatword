@@ -13,8 +13,11 @@ data class Letter(
         const val enterChar: Char = '⏎'
     }
 
-    enum class Status {
-        CORRECT, MISPLACED, INCORRECT, UNKNOWN
+    enum class Status(val weight: Int) {
+        CORRECT(3),
+        MISPLACED(2),
+        INCORRECT(3),
+        UNKNOWN(0);
     }
 
 }

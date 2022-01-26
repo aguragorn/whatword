@@ -29,15 +29,11 @@ class KeyboardViewModel(
             .mapValues { (_, value) -> value.map { it.status } }
         val validatedKeys = _keys.value.letters
 
-        for (key in validatedKeys.flatten()) {
-            val keyChar = key.char
+        for (validatedKey in validatedKeys.flatten()) {
+            val keyChar = validatedKey.char
+            val newStatus = statuses[keyChar]?.maxByOrNull { it.weight } ?: Status.UNKNOWN
 
-            key.status = when {
-                statuses[keyChar]?.contains(Status.CORRECT) == true -> Status.CORRECT
-                statuses[keyChar]?.contains(Status.MISPLACED) == true -> Status.MISPLACED
-                statuses[keyChar]?.contains(Status.INCORRECT) == true -> Status.INCORRECT
-                else -> Status.UNKNOWN
-            }
+            validatedKey.status = if (validatedKey.status.weight < newStatus.weight) newStatus else continue
         }
 
         // TODO: Remember keys state
@@ -47,6 +43,6 @@ class KeyboardViewModel(
     }
 
     fun onKeyTapped(letter: Letter) = launch(coroutineContext) {
-        _events.tryEmit(Event.KeyTapped(letter))
+        _events.tryEmit(Event.KeyTapped(letter.copy().apply { status = Status.UNKNOWN }))
     }
 }

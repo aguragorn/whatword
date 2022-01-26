@@ -5,6 +5,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import com.aguragorn.whatword.core.keyboard.model.Letter
 import com.aguragorn.whatword.grid.ui.GridViewModel
+import com.aguragorn.whatword.web.theme.appTheme
 import org.jetbrains.compose.web.css.*
 import org.jetbrains.compose.web.dom.Div
 import org.jetbrains.compose.web.dom.Text
@@ -40,10 +41,16 @@ fun Cell(
     letter: Letter?,
     style: StyleBuilder.() -> Unit = {},
 ) {
+    val theme by appTheme.collectAsState()
+
     Div(attrs = {
         style {
             width(48.px)
             height(48.px)
+            letter?.let {
+                color(theme.cellForegroundColorFor(it.status))
+                backgroundColor(theme.cellColorFor(it.status))
+            }
             border { width = 2.px; this.style = LineStyle.Solid; color = Color("#808080"); }
             textAlign("center")
             display(DisplayStyle.Flex)
@@ -53,6 +60,8 @@ fun Cell(
             lineHeight(48.px)
             fontFamily("sans-serif")
             fontSize(1.6.em)
+
+            // TODO: Apply status colors
 
             // apply style-overrides set by caller
             style()

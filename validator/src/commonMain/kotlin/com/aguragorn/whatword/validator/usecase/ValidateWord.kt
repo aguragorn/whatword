@@ -13,20 +13,23 @@ class ValidateWord(
 ) : CoroutineScope {
     override val coroutineContext = Dispatchers.Default
 
+    // TODO: pull mystery word from list
+
     suspend operator fun invoke(
         attempt: Word
     ): Word = withContext(coroutineContext) {
-        val mysteryLetters = mysteryWord.toList()
+        val mysteryLetters = mysteryWord.uppercase().toList()
 
         if (attempt.letters.size != mysteryWord.length) {
             throw IncorrectLengthException(
                 expectedLength = mysteryWord.length
             )
         }
+        // TODO: check if attempt is a valid word
 
         val validatedWord = Word(attempt.letters.toMutableList())
         for ((i, letter) in validatedWord.letters.withIndex()) {
-            val exists = letter.char in mysteryLetters
+            val exists = letter.char.uppercaseChar() in mysteryLetters
             val correctPosition = letter.char == mysteryLetters[i]
 
             letter.status = when {

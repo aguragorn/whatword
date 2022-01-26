@@ -21,6 +21,10 @@ class GridViewModel(
         _words.value = words
     }
 
+    fun newWord() {
+        updateWords(mutableWords().apply { add(Word()) })
+    }
+
     fun addLetterToGrid(letter: Letter) {
         if (lastWord.letters.size == wordLength) return
 

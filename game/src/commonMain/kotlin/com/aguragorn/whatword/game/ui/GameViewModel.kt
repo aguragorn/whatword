@@ -52,6 +52,12 @@ class GameViewModel(
 
             keyboard.value.updateKeys(validatedWord.letters)
             grid.value.onWordValidated(validatedWord)
+            grid.value.newWord()
+
+            // TODO: check for correct word
+            // TODO: Save stats
+            // TODO: Show stats
+            // TODO: Share game stats
         } catch (e: IncorrectLengthException) {
             // TODO: Show error
         }
