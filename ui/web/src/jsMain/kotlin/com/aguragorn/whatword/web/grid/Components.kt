@@ -61,8 +61,6 @@ fun Cell(
             fontFamily("sans-serif")
             fontSize(1.6.em)
 
-            // TODO: Apply status colors
-
             // apply style-overrides set by caller
             style()
         }

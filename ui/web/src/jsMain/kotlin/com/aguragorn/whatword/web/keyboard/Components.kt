@@ -78,8 +78,6 @@ fun Key(
             fontFamily("sans-serif")
             fontSize(1.6.em)
 
-            // TODO: apply status colors
-
             // apply style-overrides set by caller
             style()
         }
