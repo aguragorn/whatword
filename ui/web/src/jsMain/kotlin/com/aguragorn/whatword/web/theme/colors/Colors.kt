@@ -16,6 +16,6 @@ open class Colors(
     val secondary: CSSColorValue = Color("#FF6D00"),
     val onSecondary: CSSColorValue = Color.black,
 
-    val negative: CSSColorValue = Color("#424242"),
+    val negative: CSSColorValue = Color("#757575"),
     val onNegative: CSSColorValue = Color.white,
 )
