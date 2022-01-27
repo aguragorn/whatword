@@ -23,19 +23,13 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation(project(":core"))
-                implementation(project(":keyboard"))
-                implementation(project(":grid"))
-                implementation(project(":validator"))
                 implementation(project(":game"))
-
                 implementation(kotlin("stdlib-common"))
             }
         }
         val commonTest by getting {
             dependencies {
-                implementation(kotlin("test-common"))
-                implementation(kotlin("test-annotations-common"))
+                implementation(kotlin("test"))
             }
         }
         val jsMain by getting {

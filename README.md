@@ -10,12 +10,8 @@ Unlocking clues every turn, you have 6 tries to guess that mystery word.
 
 ## Architecture
 ### Modules
-- **`core`** - models, logic, and utilities shared among all modules
 - **`ui/common-ui`** - compose ui shared between android and desktop
 - **`ui/android`** - android app
 - **`ui/desktop`** - desktop app
 - **`ui/web`** - web app, includes compose ui for web
-- **`keyboard`** - keyboard behavior
-- **`grid`** - grid behavior
-- **`validator`** - validation logic
-- **`game`** - main game logic
+- **`game`** - main game logic and state

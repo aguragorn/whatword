@@ -6,7 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import com.aguragorn.whatword.core.keyboard.model.Letter
+import com.aguragorn.whatword.keyboard.model.Letter
 import com.aguragorn.whatword.keyboard.ui.KeyboardViewModel
 import com.aguragorn.whatword.web.theme.appTheme
 import kotlinx.browser.window

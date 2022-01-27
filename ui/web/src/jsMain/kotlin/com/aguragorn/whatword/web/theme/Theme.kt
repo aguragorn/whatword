@@ -1,6 +1,6 @@
 package com.aguragorn.whatword.web.theme
 
-import com.aguragorn.whatword.core.keyboard.model.Letter
+import com.aguragorn.whatword.keyboard.model.Letter
 import com.aguragorn.whatword.web.theme.colors.Colors
 import kotlinx.coroutines.flow.MutableStateFlow
 import org.jetbrains.compose.web.css.CSSColorValue

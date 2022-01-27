@@ -5,8 +5,8 @@ package com.aguragorn.whatword.web.grid
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import com.aguragorn.whatword.core.keyboard.model.Letter
 import com.aguragorn.whatword.grid.ui.GridViewModel
+import com.aguragorn.whatword.keyboard.model.Letter
 import com.aguragorn.whatword.web.theme.appTheme
 import org.jetbrains.compose.web.css.*
 import org.jetbrains.compose.web.dom.Div
