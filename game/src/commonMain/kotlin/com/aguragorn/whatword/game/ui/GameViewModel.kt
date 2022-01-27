@@ -1,11 +1,14 @@
 package com.aguragorn.whatword.game.ui
 
+import com.aguragorn.whatword.di.gameDI
 import com.aguragorn.whatword.grid.ui.GridViewModel
 import com.aguragorn.whatword.keyboard.model.Event.KeyTapped
 import com.aguragorn.whatword.keyboard.model.KeyLayout
 import com.aguragorn.whatword.keyboard.model.Letter
 import com.aguragorn.whatword.keyboard.model.QwertyLayout
 import com.aguragorn.whatword.keyboard.ui.KeyboardViewModel
+import com.aguragorn.whatword.statistics.di.statsDi
+import com.aguragorn.whatword.statistics.usecase.SaveGamesStats
 import com.aguragorn.whatword.validator.model.IncorrectLengthException
 import com.aguragorn.whatword.validator.usecase.ValidateWord
 import kotlinx.coroutines.CoroutineScope
@@ -15,12 +18,17 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import org.kodein.di.instance
 import kotlin.coroutines.CoroutineContext
+import kotlin.time.Duration
 
 class GameViewModel(
-    wordLength: Int = 5,
-    maxTurnCount: Int = 6,
+    private val language: String = "english",
+    private val wordLength: Int = 5,
+    private val maxTurnCount: Int = 6,
     keyLayout: KeyLayout = QwertyLayout(),
+    private val validate: ValidateWord = gameDI.instance(arg = wordLength),
+    private val saveGameStats: SaveGamesStats = statsDi.instance()
 ) : CoroutineScope {
     override val coroutineContext: CoroutineContext = Dispatchers.Main
 
@@ -30,7 +38,6 @@ class GameViewModel(
     private val _keyboard = MutableStateFlow(KeyboardViewModel(keyLayout))
     val keyboard: StateFlow<KeyboardViewModel> = _keyboard.asStateFlow()
 
-    private val validate = ValidateWord(wordLength)
 
     init {
         launch {
@@ -52,12 +59,24 @@ class GameViewModel(
 
             keyboard.value.updateKeys(validatedWord.letters)
             grid.value.onWordValidated(validatedWord)
-            grid.value.newWord()
 
-            // TODO: check for correct word
-            // TODO: Save stats
+            val isWon = validatedWord.letters.none { it.status != Letter.Status.CORRECT }
+
+            if (isWon || grid.value.words.value.size == maxTurnCount) {
+                saveGameStats(
+                    language = language,
+                    wordLength = wordLength,
+                    isWon = isWon,
+                    time = Duration.ZERO,
+                    rounds = grid.value.words.value.size
+                )
+            } else {
+                grid.value.newWord()
+            }
+
             // TODO: Show stats
             // TODO: Share game stats
+
         } catch (e: IncorrectLengthException) {
             // TODO: Show error
         }
