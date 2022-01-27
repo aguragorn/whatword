@@ -111,8 +111,8 @@ fun Key(
 @Composable
 fun ControlChar(letter: Letter) {
     val iconUrl = when (letter.char) {
-        Letter.enterChar -> "https://css.gg/arrow-long-right.svg"
-        else -> "https://css.gg/backspace.svg"
+        Letter.enterChar -> "icons/arrow-long-right.svg"
+        else -> "icons/backspace.svg"
     }
 
     Img(src = iconUrl,
