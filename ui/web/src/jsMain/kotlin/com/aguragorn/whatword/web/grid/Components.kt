@@ -1,3 +1,5 @@
+@file:Suppress("DuplicatedCode")
+
 package com.aguragorn.whatword.web.grid
 
 import androidx.compose.runtime.Composable
@@ -16,21 +18,23 @@ fun Grid(
 ) {
     val words by gridViewModel.words.collectAsState()
 
+    val gridSpacing = 8.px
+
     for (wordIndex in 0 until gridViewModel.maxTurnCount) {
         val word = words.elementAtOrNull(wordIndex)
+
         Div(attrs = {
             style {
                 display(DisplayStyle.Flex)
                 alignContent(AlignContent.Center)
                 alignItems(AlignItems.Center)
                 justifyContent(JustifyContent.Center)
-                marginBottom(4.px)
+                marginBottom(gridSpacing)
             }
-        }
-        ) {
+        }) {
             for (letterIndex in 0 until gridViewModel.wordLength) {
                 Cell(letter = word?.letters?.elementAtOrNull(letterIndex),
-                    style = { if (letterIndex > 0) marginLeft(4.px) })
+                    style = { if (letterIndex > 0) marginLeft(gridSpacing) })
             }
         }
     }
@@ -43,10 +47,12 @@ fun Cell(
 ) {
     val theme by appTheme.collectAsState()
 
+    val cellSize = 52.px
+
     Div(attrs = {
         style {
-            width(48.px)
-            height(48.px)
+            width(cellSize)
+            height(cellSize)
             letter?.let {
                 color(theme.cellForegroundColorFor(it.status))
                 backgroundColor(theme.cellColorFor(it.status))
@@ -57,7 +63,7 @@ fun Cell(
             alignContent(AlignContent.Center)
             alignItems(AlignItems.Center)
             justifyContent(JustifyContent.Center)
-            lineHeight(48.px)
+            lineHeight(cellSize)
             fontFamily("sans-serif")
             fontSize(1.6.em)
 

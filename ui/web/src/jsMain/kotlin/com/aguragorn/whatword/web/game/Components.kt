@@ -27,10 +27,13 @@ fun Game(gameViewModel: GameViewModel = GameViewModel()) {
             maxWidth(gameWidth)
             height(100.percent)
         }
-    }
-    ) {
-        Grid(grid)
+    }) {
         Spacer()
+
+        Grid(grid)
+
+        Spacer()
+
         Keyboard(keyboard)
     }
 }

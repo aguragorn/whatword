@@ -1,22 +1,26 @@
+@file:Suppress("DuplicatedCode")
+
 package com.aguragorn.whatword.web.keyboard
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import com.aguragorn.whatword.core.keyboard.model.Letter
 import com.aguragorn.whatword.keyboard.ui.KeyboardViewModel
 import com.aguragorn.whatword.web.theme.appTheme
-import kotlinx.coroutines.Dispatchers
+import kotlinx.browser.window
 import org.jetbrains.compose.web.css.*
 import org.jetbrains.compose.web.css.keywords.auto
 import org.jetbrains.compose.web.dom.Button
 import org.jetbrains.compose.web.dom.Div
 import org.jetbrains.compose.web.dom.Img
 import org.jetbrains.compose.web.dom.Text
+import org.w3c.dom.events.KeyboardEvent
 
 @Composable
 fun Keyboard(keyboardViewModel: KeyboardViewModel) {
-    val keys by keyboardViewModel.keys.collectAsState(Dispatchers.Main)
+    val keys by keyboardViewModel.keys.collectAsState()
 
     Div(attrs = {
         id("keyboard")
@@ -61,11 +65,24 @@ fun Key(
     val keyHeight = 56.px
     val keyWidth = if (letter.isControlChar) 56.px else 40.px
 
+    remember {
+        window.addEventListener("keyup", {
+            val key = (it as? KeyboardEvent)?.key.orEmpty()
+            if (key.equals("${letter.char}", ignoreCase = true)
+                || (letter.char == Letter.enterChar && key == "Enter")
+                || (letter.char == Letter.deleteChar && key == "Backspace")
+            ) {
+                keyboardViewModel.onKeyTapped(letter)
+            }
+        })
+    }
+
     Button(attrs = {
         id("key-${letter.char}")
         style {
             width(keyWidth)
             height(keyHeight)
+            border(style = LineStyle.None)
             borderRadius(4.px)
             color(theme.keyForegroundColorFor(letter.status))
             backgroundColor(theme.keyColorFor(letter.status))
@@ -77,6 +94,7 @@ fun Key(
             lineHeight(keyHeight)
             fontFamily("sans-serif")
             fontSize(1.6.em)
+            cursor("pointer")
 
             // apply style-overrides set by caller
             style()
