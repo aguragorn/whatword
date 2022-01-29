@@ -1,5 +1,6 @@
 package com.aguragorn.whatword.validator.usecase
 
+import com.aguragorn.whatword.game.storage.MysteryWordDataStore
 import com.aguragorn.whatword.grid.model.Word
 import com.aguragorn.whatword.keyboard.model.Letter
 import com.aguragorn.whatword.validator.model.IncorrectLengthException
@@ -8,24 +9,31 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class ValidateWord(
-    private var wordLength: Int = 5,
-    private var mysteryWord: String = "rated"
+    private var mysteryWordDataStore: MysteryWordDataStore,
 ) : CoroutineScope {
     override val coroutineContext = Dispatchers.Default
 
-    // TODO: pull mystery word from list
-
     suspend operator fun invoke(
-        attempt: Word
+        attempt: Word,
+        mysteryWord: String,
+        language: String
     ): Word = withContext(coroutineContext) {
         val mysteryLetters = mysteryWord.uppercase().toList()
+        val wordLength = mysteryWord.length
 
-        if (attempt.letters.size != mysteryWord.length) {
-            throw IncorrectLengthException(
-                expectedLength = mysteryWord.length
-            )
+        if (attempt.letters.size != wordLength) {
+            throw IncorrectLengthException(expectedLength = wordLength)
         }
-        // TODO: check if attempt is a valid word
+
+        val attemptStr = attempt.letters.joinToString(separator = "") { "${it.char}" }
+        val validWords = mysteryWordDataStore.getMysteryWords(
+            language = language,
+            wordLength = wordLength
+        )
+
+        if (attemptStr !in validWords) {
+            throw IllegalArgumentException("$attemptStr is not a valid word.")
+        }
 
         val validatedWord = Word(attempt.letters.toMutableList())
         for ((i, letter) in validatedWord.letters.withIndex()) {

@@ -3,6 +3,8 @@ package com.aguragorn.whatword.validator.usecase
 import com.aguragorn.whatword.grid.model.Word
 import com.aguragorn.whatword.keyboard.model.Letter
 import com.aguragorn.whatword.validator.model.IncorrectLengthException
+import io.mockk.coEvery
+import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
@@ -26,8 +28,14 @@ class ValidateWordTest {
             )
         )
 
-        val validateWord = ValidateWord(mysteryWord = mysteryWord)
-        val validatedWord = validateWord(word)
+        val validateWord = ValidateWord(mysteryWordDataStore = mockk {
+            coEvery { getMysteryWords(any(), any()) } returns listOf(mysteryWord)
+        })
+        val validatedWord = validateWord(
+            attempt = word,
+            mysteryWord = mysteryWord,
+            language = "english"
+        )
 
         assertEquals(Letter.Status.CORRECT, validatedWord.letters[0].status, "q status is wrong")
         assertEquals(Letter.Status.CORRECT, validatedWord.letters[1].status, "w status is wrong")
@@ -48,8 +56,14 @@ class ValidateWordTest {
             )
         )
 
-        val validateWord = ValidateWord(mysteryWord = mysteryWord)
-        val validatedWord = validateWord(word)
+        val validateWord = ValidateWord(mysteryWordDataStore = mockk {
+            coEvery { getMysteryWords(any(), any()) } returns listOf(mysteryWord)
+        })
+        val validatedWord = validateWord(
+            attempt = word,
+            mysteryWord = mysteryWord,
+            language = "english"
+        )
 
         assertEquals(Letter.Status.INCORRECT, validatedWord.letters[5].status)
     }
@@ -68,8 +82,14 @@ class ValidateWordTest {
             )
         )
 
-        val validateWord = ValidateWord(mysteryWord = mysteryWord)
-        val validatedWord = validateWord(word)
+        val validateWord = ValidateWord(mysteryWordDataStore = mockk {
+            coEvery { getMysteryWords(any(), any()) } returns listOf(mysteryWord)
+        })
+        val validatedWord = validateWord(
+            attempt = word,
+            mysteryWord = mysteryWord,
+            language = "english"
+        )
 
         assertEquals(Letter.Status.MISPLACED, validatedWord.letters[2].status)
         assertEquals(Letter.Status.MISPLACED, validatedWord.letters[3].status)
@@ -100,22 +120,36 @@ class ValidateWordTest {
         )
         val empty = Word()
 
-        val validate = ValidateWord(mysteryWord = mysteryWord)
+        val validate = ValidateWord(mysteryWordDataStore = mockk {
+            coEvery { getMysteryWords(any(), any()) } returns listOf(mysteryWord)
+        })
 
         try {
-            validate(shorter)
+            validate(
+                attempt = shorter,
+                mysteryWord = mysteryWord,
+                language = "english"
+            )
             fail("validate did not throw on shorter attempt")
         } catch (e: IncorrectLengthException) {
         }
 
         try {
-            validate(longer)
+            validate(
+                attempt = longer,
+                mysteryWord = mysteryWord,
+                language = "english"
+            )
             fail("validate did not throw on longer attempt")
         } catch (e: IncorrectLengthException) {
         }
 
         try {
-            validate(empty)
+            validate(
+                attempt = empty,
+                mysteryWord = mysteryWord,
+                language = "english"
+            )
             fail("validate did not throw on empty attempt")
         } catch (e: IncorrectLengthException) {
         }

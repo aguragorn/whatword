@@ -46,12 +46,18 @@ kotlin {
             dependencies {
                 implementation(kotlin("test"))
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:${Versions.kotlin_coroutines}")
+                implementation("io.mockk:mockk-common:${Versions.mockk}")
             }
         }
 
         val androidMain by getting
 
         val desktopMain by getting
+        val desktopTest by getting {
+            dependencies {
+                implementation("io.mockk:mockk:${Versions.mockk}")
+            }
+        }
 
         val jsMain by getting
     }

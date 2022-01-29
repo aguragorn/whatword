@@ -1,24 +1,27 @@
 package com.aguragorn.whatword.statistics.usecase
 
-import com.aguragorn.whatword.statistics.di.statsDi
 import com.aguragorn.whatword.statistics.model.RoundsStat
 import com.aguragorn.whatword.statistics.model.Stats
 import com.aguragorn.whatword.statistics.storage.StatsDataStore
 import com.benasher44.uuid.uuid4
-import org.kodein.di.instance
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import kotlin.time.Duration
 
 class SaveGamesStats(
-    private val statsStore: StatsDataStore = statsDi.instance()
-) {
-    operator fun invoke(
+    private val statsStore: StatsDataStore
+) : CoroutineScope {
+
+    override val coroutineContext = Dispatchers.Default
+
+    suspend operator fun invoke(
         language: String,
         wordLength: Int,
         isWon: Boolean,
         time: Duration,
         rounds: Int
-    ) {
-        // TODO: Unit test
+    ): Stats = withContext(coroutineContext) {
         val stats = statsStore
             .getStatsFor(language = language, wordLength = wordLength)
             ?: Stats(
@@ -53,6 +56,6 @@ class SaveGamesStats(
         }
 
         println(stats.toString())
-        statsStore.saveStats(stats)
+        return@withContext statsStore.saveStats(stats)
     }
 }

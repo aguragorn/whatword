@@ -1,6 +1,7 @@
 package com.aguragorn.whatword.game.ui
 
 import com.aguragorn.whatword.di.gameDI
+import com.aguragorn.whatword.game.usecase.RandomMysteryWord
 import com.aguragorn.whatword.grid.ui.GridViewModel
 import com.aguragorn.whatword.keyboard.model.Event.KeyTapped
 import com.aguragorn.whatword.keyboard.model.KeyLayout
@@ -9,7 +10,6 @@ import com.aguragorn.whatword.keyboard.model.QwertyLayout
 import com.aguragorn.whatword.keyboard.ui.KeyboardViewModel
 import com.aguragorn.whatword.statistics.di.statsDi
 import com.aguragorn.whatword.statistics.usecase.SaveGamesStats
-import com.aguragorn.whatword.validator.model.IncorrectLengthException
 import com.aguragorn.whatword.validator.usecase.ValidateWord
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -27,8 +27,9 @@ class GameViewModel(
     private val wordLength: Int = 5,
     private val maxTurnCount: Int = 6,
     keyLayout: KeyLayout = QwertyLayout(),
-    private val validate: ValidateWord = gameDI.instance(arg = wordLength),
-    private val saveGameStats: SaveGamesStats = statsDi.instance()
+    private val validate: ValidateWord = gameDI.instance(),
+    private val saveGameStats: SaveGamesStats = statsDi.instance(),
+    private val randomMysteryWord: RandomMysteryWord = gameDI.instance(),
 ) : CoroutineScope {
     override val coroutineContext: CoroutineContext = Dispatchers.Main
 
@@ -38,9 +39,17 @@ class GameViewModel(
     private val _keyboard = MutableStateFlow(KeyboardViewModel(keyLayout))
     val keyboard: StateFlow<KeyboardViewModel> = _keyboard.asStateFlow()
 
+    private val _showStats = MutableStateFlow(false)
+    val showStats: StateFlow<Boolean> = _showStats.asStateFlow()
+
+    private var mysteryWord: String = ""
 
     init {
         launch {
+            mysteryWord = randomMysteryWord(
+                language = language,
+                wordLength = wordLength
+            )
             keyboard.collectLatest { listenToEvents(it) }
         }
     }
@@ -55,7 +64,11 @@ class GameViewModel(
 
     private fun performValidation() = launch {
         try {
-            val validatedWord = validate(grid.value.lastWord)
+            val validatedWord = validate(
+                attempt = grid.value.lastWord,
+                mysteryWord = mysteryWord,
+                language = language
+            )
 
             keyboard.value.updateKeys(validatedWord.letters)
             grid.value.onWordValidated(validatedWord)
@@ -63,13 +76,15 @@ class GameViewModel(
             val isWon = validatedWord.letters.none { it.status != Letter.Status.CORRECT }
 
             if (isWon || grid.value.words.value.size == maxTurnCount) {
-                saveGameStats(
+                val stats = saveGameStats(
                     language = language,
                     wordLength = wordLength,
                     isWon = isWon,
                     time = Duration.ZERO,
                     rounds = grid.value.words.value.size
                 )
+
+                _showStats.value = true
             } else {
                 grid.value.newWord()
             }
@@ -77,8 +92,8 @@ class GameViewModel(
             // TODO: Show stats
             // TODO: Share game stats
 
-        } catch (e: IncorrectLengthException) {
-            // TODO: Show error
+        } catch (e: Throwable) {
+            println(e.message)
         }
     }
 

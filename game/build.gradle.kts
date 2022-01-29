@@ -41,6 +41,7 @@ kotlin {
             dependencies {
                 implementation(kotlin("test"))
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:${Versions.kotlin_coroutines}")
+                implementation("io.mockk:mockk-common:${Versions.mockk}")
             }
         }
 
