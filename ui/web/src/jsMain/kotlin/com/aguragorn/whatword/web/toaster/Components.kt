@@ -23,29 +23,34 @@ fun Toaster(toaster: ToasterViewModel) {
         Spacer()
         VStack {
             for (message in messages.value.reversed()) {
-                val iconUrl = when (message.type) {
-                    Message.Type.INFO -> "icons/ic_toast_info.svg"
-                    Message.Type.SUCCESS -> "icons/ic_toast_success.svg"
-                    Message.Type.WARNING -> "icons/ic_toast_warn.svg"
-                    Message.Type.ERROR -> "icons/ic_toast_error.svg"
+                val (iconUrl, bgColor) = when (message.type) {
+                    Message.Type.INFO -> "icons/ic_toast_info.svg" to "#1E88E5"
+                    Message.Type.SUCCESS -> "icons/ic_toast_success.svg" to "#66BB6A"
+                    Message.Type.WARNING -> "icons/ic_toast_warn.svg" to "#FFCA28"
+                    Message.Type.ERROR -> "icons/ic_toast_error.svg" to "#ef5350"
                 }
+
                 Card(
                     attrs = {
                         style {
                             borderRadius(16.px)
                             padding(8.px)
                             height(fitContent)
+                            backgroundColor(Color(bgColor))
                         }
                     }
                 ) {
                     HStack(attrs = {
-                        style { alignItems(AlignItems.Center) }
+                        style {
+                            alignItems(AlignItems.Center)
+                            opacity(60.percent)
+                        }
                     }) {
                         Img(src = iconUrl,
                             attrs = {
                                 style {
                                     width(auto)
-                                    height(1.em)
+                                    height(1.6.em)
                                     marginRight(2.px)
                                 }
                             })
