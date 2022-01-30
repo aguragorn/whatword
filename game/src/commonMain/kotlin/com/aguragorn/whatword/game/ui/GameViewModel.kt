@@ -1,6 +1,5 @@
 package com.aguragorn.whatword.game.ui
 
-import com.aguragorn.whatword.di.gameDI
 import com.aguragorn.whatword.game.usecase.RandomMysteryWord
 import com.aguragorn.whatword.grid.ui.GridViewModel
 import com.aguragorn.whatword.keyboard.model.Event.KeyTapped
@@ -8,8 +7,9 @@ import com.aguragorn.whatword.keyboard.model.KeyLayout
 import com.aguragorn.whatword.keyboard.model.Letter
 import com.aguragorn.whatword.keyboard.model.QwertyLayout
 import com.aguragorn.whatword.keyboard.ui.KeyboardViewModel
-import com.aguragorn.whatword.statistics.di.statsDi
 import com.aguragorn.whatword.statistics.usecase.SaveGamesStats
+import com.aguragorn.whatword.toaster.ToasterViewModel
+import com.aguragorn.whatword.toaster.model.Message
 import com.aguragorn.whatword.validator.usecase.ValidateWord
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -18,7 +18,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import org.kodein.di.instance
 import kotlin.coroutines.CoroutineContext
 import kotlin.time.Duration
 
@@ -27,9 +26,10 @@ class GameViewModel(
     private val wordLength: Int = 5,
     private val maxTurnCount: Int = 6,
     keyLayout: KeyLayout = QwertyLayout(),
-    private val validate: ValidateWord = gameDI.instance(),
-    private val saveGameStats: SaveGamesStats = statsDi.instance(),
-    private val randomMysteryWord: RandomMysteryWord = gameDI.instance(),
+    private val validate: ValidateWord,
+    private val saveGameStats: SaveGamesStats,
+    private val randomMysteryWord: RandomMysteryWord,
+    private val toaster: ToasterViewModel,
 ) : CoroutineScope {
     override val coroutineContext: CoroutineContext = Dispatchers.Main
 
@@ -84,7 +84,13 @@ class GameViewModel(
                     rounds = grid.value.words.value.size
                 )
 
-                _showStats.value = true
+                toaster.show(
+                    if (isWon) {
+                        Message(type = Message.Type.SUCCESS, text = "Correct! Yay!")
+                    } else {
+                        Message(text = "Correct word is $mysteryWord")
+                    }
+                )
             } else {
                 grid.value.newWord()
             }
@@ -93,7 +99,12 @@ class GameViewModel(
             // TODO: Share game stats
 
         } catch (e: Throwable) {
-            println(e.message)
+            toaster.show(
+                Message(
+                    type = Message.Type.ERROR,
+                    text = e.message ?: "Something went wrong. Please try another word"
+                )
+            )
         }
     }
 

@@ -8,6 +8,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import com.aguragorn.whatword.keyboard.model.Letter
 import com.aguragorn.whatword.keyboard.ui.KeyboardViewModel
+import com.aguragorn.whatword.web.app.VStack
 import com.aguragorn.whatword.web.theme.appTheme
 import kotlinx.browser.window
 import org.jetbrains.compose.web.css.*
@@ -21,12 +22,12 @@ import org.w3c.dom.events.KeyboardEvent
 @Composable
 fun Keyboard(keyboardViewModel: KeyboardViewModel) {
     val keys by keyboardViewModel.keys.collectAsState()
-
-    Div(attrs = {
+    VStack(attrs = {
         id("keyboard")
         style {
-            display(DisplayStyle.InlineBlock)
             alignContent(AlignContent.Center)
+            alignItems(AlignItems.Center)
+            justifyContent(JustifyContent.Center)
             marginBottom(8.px)
         }
     }) {
@@ -111,8 +112,8 @@ fun Key(
 @Composable
 fun ControlChar(letter: Letter) {
     val iconUrl = when (letter.char) {
-        Letter.enterChar -> "icons/arrow-long-right.svg"
-        else -> "icons/backspace.svg"
+        Letter.enterChar -> "icons/ic_keyboard_enter.svg"
+        else -> "icons/ic_keyboard_backspace.svg"
     }
 
     Img(src = iconUrl,
