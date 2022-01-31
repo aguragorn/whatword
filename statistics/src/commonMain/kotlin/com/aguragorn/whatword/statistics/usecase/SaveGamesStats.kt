@@ -20,14 +20,16 @@ class SaveGamesStats(
         wordLength: Int,
         isWon: Boolean,
         time: Duration,
-        rounds: Int
+        rounds: Int,
+        mysteryWord: String,
     ): Stats = withContext(coroutineContext) {
         val stats = statsStore
             .getStatsFor(language = language, wordLength = wordLength)
             ?: Stats(
                 id = uuid4().toString(),
                 language = language,
-                wordLength = wordLength
+                wordLength = wordLength,
+                lastMysteryWord = mysteryWord
             )
 
         stats.gamesPlayed += 1

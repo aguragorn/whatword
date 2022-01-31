@@ -7,6 +7,7 @@ import com.aguragorn.whatword.keyboard.model.KeyLayout
 import com.aguragorn.whatword.keyboard.model.Letter
 import com.aguragorn.whatword.keyboard.model.QwertyLayout
 import com.aguragorn.whatword.keyboard.ui.KeyboardViewModel
+import com.aguragorn.whatword.statistics.ui.StatisticsViewModel
 import com.aguragorn.whatword.statistics.usecase.SaveGamesStats
 import com.aguragorn.whatword.toaster.ToasterViewModel
 import com.aguragorn.whatword.toaster.model.Message
@@ -30,6 +31,7 @@ class GameViewModel(
     private val saveGameStats: SaveGamesStats,
     private val randomMysteryWord: RandomMysteryWord,
     private val toaster: ToasterViewModel,
+    private val statsViewModel: StatisticsViewModel,
 ) : CoroutineScope {
     override val coroutineContext: CoroutineContext = Dispatchers.Main
 
@@ -39,14 +41,11 @@ class GameViewModel(
     private val _keyboard = MutableStateFlow(KeyboardViewModel(keyLayout))
     val keyboard: StateFlow<KeyboardViewModel> = _keyboard.asStateFlow()
 
-    private val _showStats = MutableStateFlow(false)
-    val showStats: StateFlow<Boolean> = _showStats.asStateFlow()
-
     private var mysteryWord: String = ""
 
     init {
         launch {
-            mysteryWord = randomMysteryWord(
+            mysteryWord = randomMysteryWord.invoke(
                 language = language,
                 wordLength = wordLength
             )
@@ -64,7 +63,7 @@ class GameViewModel(
 
     private fun performValidation() = launch {
         try {
-            val validatedWord = validate(
+            val validatedWord = validate.invoke(
                 attempt = grid.value.lastWord,
                 mysteryWord = mysteryWord,
                 language = language
@@ -76,26 +75,20 @@ class GameViewModel(
             val isWon = validatedWord.letters.none { it.status != Letter.Status.CORRECT }
 
             if (isWon || grid.value.words.value.size == maxTurnCount) {
-                val stats = saveGameStats(
+                saveGameStats.invoke(
                     language = language,
                     wordLength = wordLength,
                     isWon = isWon,
                     time = Duration.ZERO,
-                    rounds = grid.value.words.value.size
+                    rounds = grid.value.words.value.size,
+                    mysteryWord = mysteryWord,
                 )
 
-                toaster.show(
-                    if (isWon) {
-                        Message(type = Message.Type.SUCCESS, text = "Correct! Yay!")
-                    } else {
-                        Message(text = "Correct word is $mysteryWord")
-                    }
-                )
+                statsViewModel.showGamesStats(language = language, wordLength = wordLength)
             } else {
                 grid.value.newWord()
             }
 
-            // TODO: Show stats
             // TODO: Share game stats
 
         } catch (e: Throwable) {

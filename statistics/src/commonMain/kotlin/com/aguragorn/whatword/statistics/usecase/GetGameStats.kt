@@ -17,7 +17,8 @@ class GetGameStats(
         ) ?: Stats(
             id = uuid4().toString(),
             language = language,
-            wordLength = wordLength
+            wordLength = wordLength,
+            lastMysteryWord = ""
         )
     }
 }

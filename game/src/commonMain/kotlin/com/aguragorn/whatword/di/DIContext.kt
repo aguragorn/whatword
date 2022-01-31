@@ -38,6 +38,7 @@ private fun DI.MainBuilder.bindGame() {
             randomMysteryWord = gameDI.instance(),
             saveGameStats = statsDi.instance(),
             toaster = gameDI.instance(),
+            statsViewModel = statsDi.instance()
         )
     }
 }
