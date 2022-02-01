@@ -16,7 +16,7 @@ fun Game(
     val keyboard by gameViewModel.keyboard.collectAsState()
     val grid by gameViewModel.grid.collectAsState()
 
-    val gameWidth = if (screenSize() == ScreenSize.SMALL) 100.vw else 480.px
+    val gameWidth = if (screenSize() == ScreenSize.SMALL) 100.percent else 480.px
 
     VStack(attrs = {
         id("game")

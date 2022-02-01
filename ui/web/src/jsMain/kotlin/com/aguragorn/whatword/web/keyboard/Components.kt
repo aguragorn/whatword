@@ -29,6 +29,7 @@ fun Keyboard(keyboardViewModel: KeyboardViewModel) {
             alignItems(AlignItems.Center)
             justifyContent(JustifyContent.Center)
             marginBottom(8.px)
+            width(100.percent)
         }
     }) {
         for (row in keys.letters) {
@@ -39,12 +40,12 @@ fun Keyboard(keyboardViewModel: KeyboardViewModel) {
                     alignItems(AlignItems.Center)
                     justifyContent(JustifyContent.Center)
                     marginBottom(8.px)
+                    width(100.percent)
                 }
             }
             ) {
                 for ((letterIndex, letter) in row.withIndex()) {
-                    Key(
-                        letter = letter,
+                    Key(letter = letter,
                         keyboardViewModel = keyboardViewModel,
                         style = {
                             if (letterIndex > 0) marginLeft(8.px)
@@ -64,7 +65,7 @@ fun Key(
 ) {
     val theme by appTheme.collectAsState()
     val keyHeight = 56.px
-    val keyWidth = if (letter.isControlChar) 56.px else 40.px
+    val keyWidth = if (letter.isControlChar) 56.px else 36.px
 
     remember {
         window.addEventListener("keyup", {
@@ -96,6 +97,7 @@ fun Key(
             fontFamily("sans-serif")
             fontSize(1.6.em)
             cursor("pointer")
+            flexShrink(1)
 
             // apply style-overrides set by caller
             style()
@@ -115,12 +117,19 @@ fun ControlChar(letter: Letter) {
         Letter.enterChar -> "icons/ic_keyboard_enter.svg"
         else -> "icons/ic_keyboard_backspace.svg"
     }
+    val altText = when (letter.char) {
+        Letter.enterChar -> "Submit"
+        else -> "Delete"
+    }
 
-    Img(src = iconUrl,
+    Img(
+        src = iconUrl,
         attrs = {
             style {
                 width(40.px)
                 height(auto)
             }
-        })
+        },
+        alt = altText
+    )
 }
