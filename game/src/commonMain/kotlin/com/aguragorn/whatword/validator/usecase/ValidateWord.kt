@@ -1,5 +1,6 @@
 package com.aguragorn.whatword.validator.usecase
 
+import com.aguragorn.whatword.config.model.GameConfig
 import com.aguragorn.whatword.game.storage.MysteryWordDataStore
 import com.aguragorn.whatword.grid.model.Word
 import com.aguragorn.whatword.keyboard.model.Letter
@@ -16,7 +17,7 @@ class ValidateWord(
     suspend operator fun invoke(
         attempt: Word,
         mysteryWord: String,
-        language: String
+        config: GameConfig,
     ): Word = withContext(coroutineContext) {
         val mysteryLetters = mysteryWord.uppercase().toList()
         val wordLength = mysteryWord.length
@@ -26,10 +27,7 @@ class ValidateWord(
         }
 
         val attemptStr = attempt.letters.joinToString(separator = "") { "${it.char}" }
-        val validWords = mysteryWordDataStore.getMysteryWords(
-            language = language,
-            wordLength = wordLength
-        )
+        val validWords = mysteryWordDataStore.getMysteryWords(gameConfig = config)
 
         if (attemptStr !in validWords) {
             throw IllegalArgumentException("$attemptStr is not a valid word.")

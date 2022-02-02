@@ -1,6 +1,9 @@
 package com.aguragorn.whatword.web.app
 
 import org.jetbrains.compose.web.css.CSSKeywordValue
+import org.jetbrains.compose.web.css.CSSNumeric
 import org.jetbrains.compose.web.css.keywords.CSSAutoKeyword
+import org.jetbrains.compose.web.css.percent
 
-val fitContent: CSSAutoKeyword = CSSKeywordValue("fit-content").unsafeCast<CSSAutoKeyword>()
+val wrapContent: CSSAutoKeyword = CSSKeywordValue("fit-content").unsafeCast<CSSAutoKeyword>()
+val matchParent: CSSNumeric = 100.percent

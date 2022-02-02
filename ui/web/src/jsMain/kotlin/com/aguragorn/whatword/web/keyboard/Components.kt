@@ -9,6 +9,7 @@ import androidx.compose.runtime.remember
 import com.aguragorn.whatword.keyboard.model.Letter
 import com.aguragorn.whatword.keyboard.ui.KeyboardViewModel
 import com.aguragorn.whatword.web.app.VStack
+import com.aguragorn.whatword.web.app.matchParent
 import com.aguragorn.whatword.web.theme.appTheme
 import kotlinx.browser.window
 import org.jetbrains.compose.web.css.*
@@ -25,22 +26,22 @@ fun Keyboard(keyboardViewModel: KeyboardViewModel) {
     VStack(attrs = {
         id("keyboard")
         style {
+            width(matchParent)
             alignContent(AlignContent.Center)
             alignItems(AlignItems.Center)
             justifyContent(JustifyContent.Center)
             marginBottom(8.px)
-            width(100.percent)
         }
     }) {
         for (row in keys.letters) {
             Div(attrs = {
                 style {
+                    width(matchParent)
                     display(DisplayStyle.Flex)
                     alignContent(AlignContent.Center)
                     alignItems(AlignItems.Center)
                     justifyContent(JustifyContent.Center)
                     marginBottom(8.px)
-                    width(100.percent)
                 }
             }
             ) {

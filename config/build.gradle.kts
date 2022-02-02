@@ -2,6 +2,7 @@ import com.aguragorn.Versions
 
 plugins {
     kotlin("multiplatform")
+    kotlin("plugin.serialization") version "1.6.10"
     id("com.android.library")
     id("com.aguragorn.androidconfig")
     id("com.aguragorn.optins")
@@ -15,7 +16,7 @@ repositories {
 }
 
 kotlin {
-    /* Targets configuration omitted. 
+    /* Targets configuration omitted.
     *  To find out how to configure the targets, please follow the link:
     *  https://kotlinlang.org/docs/reference/building-mpp-with-gradle.html#setting-up-targets */
     android()
@@ -32,13 +33,12 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation(project(":config"))
-                implementation(project(":statistics"))
-
                 implementation(kotlin("stdlib-common"))
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.kotlin_coroutines}")
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:${Versions.kotlin_serialization_json}")
 
                 implementation("org.kodein.di:kodein-di:${Versions.kodein}")
+                implementation("com.benasher44:uuid:${Versions.uuid}")
             }
         }
         val commonTest by getting {
@@ -52,6 +52,11 @@ kotlin {
         val androidMain by getting
 
         val desktopMain by getting
+        val desktopTest by getting {
+            dependencies {
+                implementation("io.mockk:mockk:${Versions.mockk}")
+            }
+        }
 
         val jsMain by getting
     }

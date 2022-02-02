@@ -1,5 +1,6 @@
 package com.aguragorn.whatword.game.usecase
 
+import com.aguragorn.whatword.config.model.GameConfig
 import com.aguragorn.whatword.game.storage.MysteryWordDataStore
 import kotlinx.datetime.LocalDate
 
@@ -8,11 +9,10 @@ class RandomMysteryWord(
 ) {
 
     suspend operator fun invoke(
-        language: String,
-        wordLength: Int,
+        config: GameConfig,
         date: LocalDate? = null
     ): String {
         // TODO: Daily random word
-        return mysteryWordDataStore.getMysteryWords(language, wordLength).random()
+        return mysteryWordDataStore.getMysteryWords(config).random()
     }
 }

@@ -7,7 +7,9 @@ import com.aguragorn.whatword.game.ui.GameViewModel
 import com.aguragorn.whatword.web.app.*
 import com.aguragorn.whatword.web.grid.Grid
 import com.aguragorn.whatword.web.keyboard.Keyboard
-import org.jetbrains.compose.web.css.*
+import org.jetbrains.compose.web.css.height
+import org.jetbrains.compose.web.css.maxWidth
+import org.jetbrains.compose.web.css.width
 
 @Composable
 fun Game(
@@ -16,21 +18,17 @@ fun Game(
     val keyboard by gameViewModel.keyboard.collectAsState()
     val grid by gameViewModel.grid.collectAsState()
 
-    val gameWidth = if (screenSize() == ScreenSize.SMALL) 100.percent else 480.px
-
     VStack(attrs = {
-        id("game")
+        id("game-component")
         style {
-            maxWidth(gameWidth)
-            height(100.percent)
+            maxWidth(gameWidth())
+            height(matchParent)
         }
     }) {
         Spacer()
 
         HStack(attrs = {
-            style {
-                width(100.percent)
-            }
+            style { width(matchParent) }
         }) { Spacer(); Grid(grid); Spacer(); }
 
         Spacer()

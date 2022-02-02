@@ -5,7 +5,9 @@ import org.jetbrains.compose.web.css.Color
 
 open class Colors(
     val background: CSSColorValue = Color.white,
+    val backgroundInverse: CSSColorValue = Color("#212121"),
     val foreground: CSSColorValue = Color("#212121"),
+    val foregroundInverse: CSSColorValue = Color.white,
 
     val surface: CSSColorValue = Color("#E0E0E0"),
     val onSurface: CSSColorValue = Color.black,

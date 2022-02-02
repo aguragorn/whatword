@@ -1,10 +1,11 @@
 package com.aguragorn.whatword.statistics.model
 
-data class Stats(
+import com.aguragorn.whatword.config.model.GameConfig
+
+data class Stats constructor(
     val id: String? = null,
     var gamesPlayed: Long = 0,
-    var language: String,
-    var wordLength: Int,
+    var gameConfig: GameConfig,
     var wins: Long = 0,
     var currentStreak: Int = 0,
     var maxStreak: Int = 0,
@@ -14,10 +15,13 @@ data class Stats(
 ) {
     val isLastRoundWon: Boolean get() = currentStreak != 0
     val hasPlayed: Boolean get() = gamesPlayed > 0
+    val winRate: Double = (wins.toDouble() / gamesPlayed.toDouble()) * 100.0
 }
 
 data class RoundsStat(
     var guessCount: Int,
     var numberOfGames: Long,
 )
+
+fun List<RoundsStat>.roundWithMostWins() = maxByOrNull { it.numberOfGames }
 

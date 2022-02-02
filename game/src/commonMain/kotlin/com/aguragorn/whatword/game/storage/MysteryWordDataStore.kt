@@ -1,6 +1,12 @@
 package com.aguragorn.whatword.game.storage
 
-class MysteryWordDataStore {
+import com.aguragorn.whatword.config.model.GameConfig
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+
+class MysteryWordDataStore : CoroutineScope {
+    override val coroutineContext = Dispatchers.Default
 
     private val words = """
         which
@@ -5766,10 +5772,10 @@ class MysteryWordDataStore {
 
 
     suspend fun getMysteryWords(
-        language: String,
-        wordLength: Int
-    ): List<String> {
-        // TODO: consider language and word length
-        return words
+        gameConfig: GameConfig
+    ): List<String> = withContext(coroutineContext) {
+        // TODO: consider gameConfig
+        return@withContext words
     }
+
 }

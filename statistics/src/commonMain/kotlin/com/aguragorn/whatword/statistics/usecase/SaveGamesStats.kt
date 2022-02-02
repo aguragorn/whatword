@@ -1,5 +1,6 @@
 package com.aguragorn.whatword.statistics.usecase
 
+import com.aguragorn.whatword.config.model.GameConfig
 import com.aguragorn.whatword.statistics.model.RoundsStat
 import com.aguragorn.whatword.statistics.model.Stats
 import com.aguragorn.whatword.statistics.storage.StatsDataStore
@@ -16,19 +17,17 @@ class SaveGamesStats(
     override val coroutineContext = Dispatchers.Default
 
     suspend operator fun invoke(
-        language: String,
-        wordLength: Int,
+        config: GameConfig,
         isWon: Boolean,
         time: Duration,
         rounds: Int,
         mysteryWord: String,
     ): Stats = withContext(coroutineContext) {
         val stats = statsStore
-            .getStatsFor(language = language, wordLength = wordLength)
+            .getStatsFor(gameConfig = config)
             ?: Stats(
                 id = uuid4().toString(),
-                language = language,
-                wordLength = wordLength,
+                gameConfig = GameConfig.default,
                 lastMysteryWord = mysteryWord
             )
 

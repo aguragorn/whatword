@@ -1,5 +1,6 @@
 package com.aguragorn.whatword.game.ui
 
+import com.aguragorn.whatword.config.model.GameConfig
 import com.aguragorn.whatword.game.usecase.RandomMysteryWord
 import com.aguragorn.whatword.grid.ui.GridViewModel
 import com.aguragorn.whatword.keyboard.model.Event.KeyTapped
@@ -22,10 +23,8 @@ import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
 import kotlin.time.Duration
 
-class GameViewModel(
-    private val language: String = "english",
-    private val wordLength: Int = 5,
-    private val maxTurnCount: Int = 6,
+class GameViewModel constructor(
+    private val config: GameConfig = GameConfig.default,
     keyLayout: KeyLayout = QwertyLayout(),
     private val validate: ValidateWord,
     private val saveGameStats: SaveGamesStats,
@@ -35,7 +34,7 @@ class GameViewModel(
 ) : CoroutineScope {
     override val coroutineContext: CoroutineContext = Dispatchers.Main
 
-    private val _grid = MutableStateFlow(GridViewModel(wordLength, maxTurnCount))
+    private val _grid = MutableStateFlow(GridViewModel(config.wordLength, config.maxTurnCount))
     val grid: StateFlow<GridViewModel> = _grid.asStateFlow()
 
     private val _keyboard = MutableStateFlow(KeyboardViewModel(keyLayout))
@@ -45,10 +44,7 @@ class GameViewModel(
 
     init {
         launch {
-            mysteryWord = randomMysteryWord.invoke(
-                language = language,
-                wordLength = wordLength
-            )
+            mysteryWord = randomMysteryWord.invoke(config)
             keyboard.collectLatest { listenToEvents(it) }
         }
     }
@@ -66,7 +62,7 @@ class GameViewModel(
             val validatedWord = validate.invoke(
                 attempt = grid.value.lastWord,
                 mysteryWord = mysteryWord,
-                language = language
+                config = config,
             )
 
             keyboard.value.updateKeys(validatedWord.letters)
@@ -74,17 +70,16 @@ class GameViewModel(
 
             val isWon = validatedWord.letters.none { it.status != Letter.Status.CORRECT }
 
-            if (isWon || grid.value.words.value.size == maxTurnCount) {
+            if (isWon || grid.value.words.value.size == config.maxTurnCount) {
                 saveGameStats.invoke(
-                    language = language,
-                    wordLength = wordLength,
+                    config = config,
                     isWon = isWon,
                     time = Duration.ZERO,
                     rounds = grid.value.words.value.size,
                     mysteryWord = mysteryWord,
                 )
 
-                statsViewModel.showGamesStats(language = language, wordLength = wordLength)
+                statsViewModel.showGamesStats(config = config)
             } else {
                 grid.value.newWord()
             }

@@ -33,12 +33,14 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
+                implementation(project(":config"))
+
                 implementation(kotlin("stdlib-common"))
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.kotlin_coroutines}")
                 api("org.jetbrains.kotlinx:kotlinx-datetime:${Versions.kotlin_date_time}")
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:${Versions.kotlin_serialization_json}")
 
-                api("org.kodein.di:kodein-di:${Versions.kodein}")
+                implementation("org.kodein.di:kodein-di:${Versions.kodein}")
                 implementation("com.benasher44:uuid:${Versions.uuid}")
             }
         }

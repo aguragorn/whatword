@@ -16,7 +16,7 @@ fun Toaster(toaster: ToasterViewModel) {
 
     HStack(attrs = {
         style {
-            width(100.percent)
+            width(matchParent)
             position(Position.Absolute)
         }
     }) {
@@ -35,7 +35,7 @@ fun Toaster(toaster: ToasterViewModel) {
                         style {
                             borderRadius(16.px)
                             padding(8.px)
-                            height(fitContent)
+                            height(wrapContent)
                             backgroundColor(Color(bgColor))
                         }
                     }
