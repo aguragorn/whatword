@@ -1,9 +1,12 @@
-package com.aguragorn.whatword.di
+package com.aguragorn.whatword.web.di
 
 import com.aguragorn.whatword.game.storage.MysteryWordDataStore
 import com.aguragorn.whatword.game.ui.GameViewModel
 import com.aguragorn.whatword.game.usecase.RandomMysteryWord
 import com.aguragorn.whatword.statistics.storage.StatsDataStore
+import com.aguragorn.whatword.statistics.storage.sqldelight.DB
+import com.aguragorn.whatword.statistics.storage.sqldelight.DriverProvider
+import com.aguragorn.whatword.statistics.storage.sqldelight.SqlDelightStatsDataStore
 import com.aguragorn.whatword.statistics.ui.StatisticsViewModel
 import com.aguragorn.whatword.statistics.usecase.GetGameStats
 import com.aguragorn.whatword.statistics.usecase.SaveGamesStats
@@ -14,7 +17,7 @@ import org.kodein.di.DirectDI
 import org.kodein.di.bindSingleton
 import org.kodein.di.instance
 
-val gameDI: DirectDI = DI.direct {
+val DI: DirectDI = DI.direct {
     bindStatistics()
     bindMysteryWord()
     bindValidator()
@@ -23,7 +26,8 @@ val gameDI: DirectDI = DI.direct {
 }
 
 private fun DI.MainBuilder.bindStatistics() {
-    bindSingleton { StatsDataStore() }
+    bindSingleton { DriverProvider() }
+    bindSingleton<StatsDataStore> { SqlDelightStatsDataStore(DB(driverProvider = instance())) }
 
     bindSingleton { SaveGamesStats(statsStore = instance()) }
     bindSingleton { GetGameStats(statsStore = instance()) }

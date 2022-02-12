@@ -1,0 +1,50 @@
+import com.aguragorn.whatword.config.model.GameConfig;
+import com.aguragorn.whatword.statistics.model.RoundsStat;
+import kotlin.collections.List;
+
+CREATE TABLE Stats
+(
+    id                TEXT                     NOT NULL           PRIMARY KEY,
+    games_played      INTEGER                  NOT NULL DEFAULT 0,
+    game_config       TEXT AS GameConfig       NOT NULL,
+    wins              INTEGER                  NOT NULL DEFAULT 0,
+    current_streak    INTEGER                  NOT NULL DEFAULT 0,
+    max_streak        INTEGER                  NOT NULL DEFAULT 0,
+    best_time_ms      INTEGER                  NOT NULL DEFAULT 0,
+    round_stats       TEXT AS List<RoundsStat> NOT NULL,
+    last_mystery_word TEXT                     NOT NULL
+);
+
+save:
+INSERT INTO Stats
+(
+    id,
+    games_played,
+    game_config,
+    wins,
+    current_streak,
+    best_time_ms,
+    round_stats,
+    last_mystery_word
+) VALUES ?;
+
+findById:
+SELECT * FROM Stats WHERE id=?;
+
+findByGameConfig:
+SELECT * FROM Stats WHERE game_config=?;
+
+update:
+UPDATE Stats
+SET
+    id=?,
+    games_played=?,
+    game_config=?,
+    wins=?,
+    current_streak=?,
+    best_time_ms=?,
+    round_stats=?,
+    last_mystery_word=?
+WHERE id=?1;
+
+-- TODO: implement other queries

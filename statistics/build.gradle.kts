@@ -6,6 +6,7 @@ plugins {
     id("com.android.library")
     id("com.aguragorn.androidconfig")
     id("com.aguragorn.optins")
+    id("com.squareup.sqldelight")
 }
 
 group = "com.aguragorn.whatword"
@@ -52,15 +53,34 @@ kotlin {
             }
         }
 
-        val androidMain by getting
+        val androidMain by getting {
+            dependencies {
+                implementation("com.squareup.sqldelight:android-driver:1.5.3")
+            }
+        }
 
-        val desktopMain by getting
+        val desktopMain by getting {
+            dependencies {
+                implementation("com.squareup.sqldelight:sqlite-driver:1.5.3")
+            }
+        }
         val desktopTest by getting {
             dependencies {
                 implementation("io.mockk:mockk:${Versions.mockk}")
             }
         }
 
-        val jsMain by getting
+        val jsMain by getting {
+            dependencies {
+                implementation("com.squareup.sqldelight:sqljs-driver:1.5.3")
+            }
+        }
+    }
+}
+
+sqldelight {
+    database("StatisticsDB") {
+        packageName = "com.aguragorn.whatword.statistics.storage.sqldelight"
+        schemaOutputDirectory = file("build/dbs")
     }
 }

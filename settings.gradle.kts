@@ -9,7 +9,7 @@ pluginManagement {
 }
 rootProject.name = "WhatWord"
 
-enableFeaturePreview("GRADLE_METADATA")
+//enableFeaturePreview("GRADLE_METADATA")
 
 include("ui:android")
 include("ui:desktop")

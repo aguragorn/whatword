@@ -23,8 +23,13 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
+                implementation(project(":config"))
                 implementation(project(":game"))
+                implementation(project(":statistics"))
+
                 implementation(kotlin("stdlib-common"))
+
+                implementation("org.kodein.di:kodein-di:${com.aguragorn.Versions.kodein}")
             }
         }
         val commonTest by getting {
@@ -36,6 +41,7 @@ kotlin {
             dependencies {
                 implementation(compose.web.core)
                 implementation(compose.runtime)
+                implementation(npm("copy-webpack-plugin", "9.1.0"))
             }
         }
     }

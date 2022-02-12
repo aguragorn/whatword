@@ -37,8 +37,6 @@ kotlin {
 
                 implementation(kotlin("stdlib-common"))
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.kotlin_coroutines}")
-
-                implementation("org.kodein.di:kodein-di:${Versions.kodein}")
             }
         }
         val commonTest by getting {
