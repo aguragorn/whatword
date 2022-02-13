@@ -31,17 +31,17 @@ class SaveGamesStats(
                 lastMysteryWord = mysteryWord
             )
 
-        stats.gamesPlayed += 1
+        stats.gamesPlayed += 1L
 
         if (isWon) {
-            stats.wins += 1
-            stats.currentStreak += 1
+            stats.wins += 1L
+            stats.currentStreak += 1L
             stats.roundsStats
                 .firstOrNull { it.guessCount == rounds }
-                ?.apply { numberOfGames += 1 }
+                ?.apply { numberOfGames += 1L }
                 ?: RoundsStat(
                     guessCount = rounds,
-                    numberOfGames = 1
+                    numberOfGames = 1L
                 ).also { stats.roundsStats.add(it) }
 
             if (stats.currentStreak > stats.maxStreak) {
@@ -53,7 +53,7 @@ class SaveGamesStats(
             }
 
         } else {
-            stats.currentStreak = 0
+            stats.currentStreak = 0L
         }
 
         println(stats.toString())
