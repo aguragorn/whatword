@@ -89,9 +89,9 @@ fun MainStats(stats: Stats) {
         Spacer()
 
         Stat("${stats.gamesPlayed}", "Played")
-        Stat("${stats.winRate}", "Win %")
+        Stat("${stats.winRate}", "Win %") // TODO: round out to 2 decimal places
         Stat("${stats.currentStreak}", "Current\r\nStreak")
-        Stat("${stats.maxStreak}", "Best\r\nStreak")
+        Stat("${stats.bestStreak}", "Best\r\nStreak")
 
         Spacer()
     }

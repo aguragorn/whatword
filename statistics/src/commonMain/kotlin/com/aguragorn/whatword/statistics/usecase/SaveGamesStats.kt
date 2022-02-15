@@ -4,7 +4,6 @@ import com.aguragorn.whatword.config.model.GameConfig
 import com.aguragorn.whatword.statistics.model.RoundsStat
 import com.aguragorn.whatword.statistics.model.Stats
 import com.aguragorn.whatword.statistics.storage.StatsDataStore
-import com.benasher44.uuid.uuid4
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -23,15 +22,15 @@ class SaveGamesStats(
         rounds: Int,
         mysteryWord: String,
     ): Stats = withContext(coroutineContext) {
-        val stats = statsStore
-            .getStatsFor(gameConfig = config)
+        val stats = statsStore.getStatsFor(gameConfig = config)
+            ?.also {
+                it.gamesPlayed += 1L
+                it.lastMysteryWord = mysteryWord
+            }
             ?: Stats(
-                id = uuid4().toString(),
                 gameConfig = GameConfig.default,
                 lastMysteryWord = mysteryWord
             )
-
-        stats.gamesPlayed += 1L
 
         if (isWon) {
             stats.wins += 1L
@@ -44,8 +43,8 @@ class SaveGamesStats(
                     numberOfGames = 1L
                 ).also { stats.roundsStats.add(it) }
 
-            if (stats.currentStreak > stats.maxStreak) {
-                stats.maxStreak = stats.currentStreak
+            if (stats.currentStreak > stats.bestStreak) {
+                stats.bestStreak = stats.currentStreak
             }
 
             if (stats.bestTimeMs == 0L || time.inWholeMilliseconds < stats.bestTimeMs) {

@@ -58,7 +58,7 @@ fun Stats.toEntity(): StatsEntity {
         gameConfig = model.gameConfig.toEntity()
         gamesPlayed = model.gamesPlayed.toString()
         lastMysteryWord = model.lastMysteryWord
-        maxStreak = model.maxStreak.toString()
+        maxStreak = model.bestStreak.toString()
         roundsStats = model.roundsStats.toEntity()
         wins = model.wins.toString()
     }
@@ -70,7 +70,7 @@ fun StatsEntity.toDomain(): Stats = Stats(
     gameConfig = gameConfig.toDomain(),
     wins = wins.toLongOrZero(),
     currentStreak = currentStreak.toLongOrZero(),
-    maxStreak = maxStreak.toLongOrZero(),
+    bestStreak = maxStreak.toLongOrZero(),
     bestTimeMs = bestTimeMs.toLongOrZero(),
     roundsStats = roundsStats.toDomain(),
     lastMysteryWord = lastMysteryWord,

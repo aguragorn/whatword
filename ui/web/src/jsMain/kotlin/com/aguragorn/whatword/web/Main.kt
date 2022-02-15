@@ -23,6 +23,8 @@ fun main() {
     renderComposable(rootElementId = "root") {
         if (screenSize() != ScreenSize.SMALL) Spacer()
 
+        // TODO: Toggle Stats Screen
+        // TODO: Settings Screen
         Game(gameViewModel)
         Toaster(toasterViewModel)
         Stats(statisticsViewModel)

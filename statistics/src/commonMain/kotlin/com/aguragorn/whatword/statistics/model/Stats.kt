@@ -9,7 +9,7 @@ data class Stats(
     var gameConfig: GameConfig,
     var wins: Long = 0L,
     var currentStreak: Long = 0L,
-    var maxStreak: Long = 0L,
+    var bestStreak: Long = 0L,
     var bestTimeMs: Long = 0L,
     var roundsStats: MutableList<RoundsStat> = mutableListOf(),
     var lastMysteryWord: String,

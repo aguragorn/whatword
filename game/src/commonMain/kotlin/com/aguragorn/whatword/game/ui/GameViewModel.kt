@@ -20,10 +20,14 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import kotlinx.datetime.Clock
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.todayAt
 import kotlin.coroutines.CoroutineContext
 import kotlin.time.Duration
 
 class GameViewModel constructor(
+    private val isPractice: Boolean = false,
     private val config: GameConfig = GameConfig.default,
     keyLayout: KeyLayout = QwertyLayout(),
     private val validate: ValidateWord,
@@ -44,7 +48,16 @@ class GameViewModel constructor(
 
     init {
         launch {
-            mysteryWord = randomMysteryWord.invoke(config)
+            val today = if (!isPractice) Clock.System.todayAt(TimeZone.currentSystemDefault()) else null
+
+            mysteryWord = randomMysteryWord.invoke(
+                config = config,
+                date = today
+            ).value
+
+            // TODO: display puzzle number
+            // TODO: play time
+
             keyboard.collectLatest { listenToEvents(it) }
         }
     }
