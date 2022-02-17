@@ -52,11 +52,12 @@ private fun DI.MainBuilder.bindGame() {
     bindSingleton { RandomMysteryWord(mysteryWordDataStore = instance()) }
     bindSingleton {
         GameViewModel(
-            validate = instance(),
+            getGameStats = instance(),
             randomMysteryWord = instance(),
             saveGameStats = instance(),
+            statsViewModel = instance(),
             toaster = instance(),
-            statsViewModel = instance()
+            validate = instance(),
         )
     }
 }

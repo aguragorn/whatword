@@ -11,6 +11,7 @@ import com.aguragorn.whatword.web.theme.Theme
 import com.aguragorn.whatword.web.theme.appTheme
 import org.jetbrains.compose.web.css.*
 import org.jetbrains.compose.web.dom.*
+import kotlin.math.roundToInt
 
 @Composable
 fun Stats(statsViewModel: StatisticsViewModel) {
@@ -89,7 +90,7 @@ fun MainStats(stats: Stats) {
         Spacer()
 
         Stat("${stats.gamesPlayed}", "Played")
-        Stat("${stats.winRate}", "Win %") // TODO: round out to 2 decimal places
+        Stat("${stats.winRate.roundToInt()}", "Win %")
         Stat("${stats.currentStreak}", "Current\r\nStreak")
         Stat("${stats.bestStreak}", "Best\r\nStreak")
 

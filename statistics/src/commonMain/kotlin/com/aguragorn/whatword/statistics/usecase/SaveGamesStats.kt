@@ -29,7 +29,8 @@ class SaveGamesStats(
             }
             ?: Stats(
                 gameConfig = GameConfig.default,
-                lastMysteryWord = mysteryWord
+                gamesPlayed = 1L,
+                lastMysteryWord = mysteryWord,
             )
 
         if (isWon) {

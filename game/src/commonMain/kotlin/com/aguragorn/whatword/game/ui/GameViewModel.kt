@@ -1,6 +1,7 @@
 package com.aguragorn.whatword.game.ui
 
 import com.aguragorn.whatword.config.model.GameConfig
+import com.aguragorn.whatword.game.model.MysteryWord
 import com.aguragorn.whatword.game.usecase.RandomMysteryWord
 import com.aguragorn.whatword.grid.ui.GridViewModel
 import com.aguragorn.whatword.keyboard.model.Event.KeyTapped
@@ -9,6 +10,7 @@ import com.aguragorn.whatword.keyboard.model.Letter
 import com.aguragorn.whatword.keyboard.model.QwertyLayout
 import com.aguragorn.whatword.keyboard.ui.KeyboardViewModel
 import com.aguragorn.whatword.statistics.ui.StatisticsViewModel
+import com.aguragorn.whatword.statistics.usecase.GetGameStats
 import com.aguragorn.whatword.statistics.usecase.SaveGamesStats
 import com.aguragorn.whatword.toaster.ToasterViewModel
 import com.aguragorn.whatword.toaster.model.Message
@@ -20,6 +22,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.todayAt
@@ -27,14 +30,15 @@ import kotlin.coroutines.CoroutineContext
 import kotlin.time.Duration
 
 class GameViewModel constructor(
-    private val isPractice: Boolean = false,
     private val config: GameConfig = GameConfig.default,
+    private val getGameStats: GetGameStats,
+    private val isPractice: Boolean = false,
     keyLayout: KeyLayout = QwertyLayout(),
-    private val validate: ValidateWord,
-    private val saveGameStats: SaveGamesStats,
     private val randomMysteryWord: RandomMysteryWord,
-    private val toaster: ToasterViewModel,
+    private val saveGameStats: SaveGamesStats,
     private val statsViewModel: StatisticsViewModel,
+    private val toaster: ToasterViewModel,
+    private val validate: ValidateWord,
 ) : CoroutineScope {
     override val coroutineContext: CoroutineContext = Dispatchers.Main
 
@@ -44,18 +48,18 @@ class GameViewModel constructor(
     private val _keyboard = MutableStateFlow(KeyboardViewModel(keyLayout))
     val keyboard: StateFlow<KeyboardViewModel> = _keyboard.asStateFlow()
 
-    private var mysteryWord: String = ""
+    private val _mysteryWord = MutableStateFlow<MysteryWord?>(null)
+    val mysteryWord: StateFlow<MysteryWord?> = _mysteryWord.asStateFlow()
 
     init {
         launch {
             val today = if (!isPractice) Clock.System.todayAt(TimeZone.currentSystemDefault()) else null
 
-            mysteryWord = randomMysteryWord.invoke(
+            _mysteryWord.value = randomMysteryWord.invoke(
                 config = config,
                 date = today
-            ).value
+            )
 
-            // TODO: display puzzle number
             // TODO: play time
 
             keyboard.collectLatest { listenToEvents(it) }
@@ -70,11 +74,18 @@ class GameViewModel constructor(
         }
     }
 
+    private suspend fun hasPlayed() = withContext(Dispatchers.Main) {
+        getGameStats.invoke(config).lastMysteryWord == _mysteryWord.value?.word
+    }
+
     private fun performValidation() = launch {
+        if (hasPlayed()) return@launch
+        val mysteryWord = _mysteryWord.value ?: return@launch
+
         try {
             val validatedWord = validate.invoke(
                 attempt = grid.value.lastWord,
-                mysteryWord = mysteryWord,
+                mysteryWord = mysteryWord.word,
                 config = config,
             )
 
@@ -89,7 +100,7 @@ class GameViewModel constructor(
                     isWon = isWon,
                     time = Duration.ZERO,
                     rounds = grid.value.words.value.size,
-                    mysteryWord = mysteryWord,
+                    mysteryWord = mysteryWord.word,
                 )
 
                 statsViewModel.showGamesStats(config = config)

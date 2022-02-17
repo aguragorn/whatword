@@ -2,5 +2,5 @@ package com.aguragorn.whatword.game.model
 
 data class MysteryWord(
     val puzzleNumber: Int,
-    val value: String,
+    val word: String,
 )
