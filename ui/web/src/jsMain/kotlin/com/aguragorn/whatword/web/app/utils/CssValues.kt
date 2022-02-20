@@ -1,4 +1,4 @@
-package com.aguragorn.whatword.web.app
+package com.aguragorn.whatword.web.app.utils
 
 import org.jetbrains.compose.web.css.CSSKeywordValue
 import org.jetbrains.compose.web.css.CSSNumeric

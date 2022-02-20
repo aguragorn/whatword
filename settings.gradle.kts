@@ -13,7 +13,7 @@ rootProject.name = "WhatWord"
 
 include("ui:android")
 include("ui:desktop")
-include("ui:common-ui")
+include("ui:common-jetpack")
 include("ui:web")
 include("game")
 include("statistics")

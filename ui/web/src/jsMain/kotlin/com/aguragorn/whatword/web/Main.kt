@@ -1,16 +1,23 @@
 package com.aguragorn.whatword.web
 
+import androidx.compose.runtime.collectAsState
 import com.aguragorn.whatword.game.ui.GameViewModel
 import com.aguragorn.whatword.statistics.ui.StatisticsViewModel
 import com.aguragorn.whatword.toaster.ToasterViewModel
-import com.aguragorn.whatword.web.app.ScreenSize
-import com.aguragorn.whatword.web.app.Spacer
-import com.aguragorn.whatword.web.app.screenSize
+import com.aguragorn.whatword.web.app.VStack
+import com.aguragorn.whatword.web.app.utils.makeResponsive
+import com.aguragorn.whatword.web.app.utils.matchParent
 import com.aguragorn.whatword.web.di.DI
-import com.aguragorn.whatword.web.game.Game
+import com.aguragorn.whatword.web.game.GameScreen
+import com.aguragorn.whatword.web.menu.Menu
 import com.aguragorn.whatword.web.statistics.Stats
+import com.aguragorn.whatword.web.theme.appTheme
 import com.aguragorn.whatword.web.toaster.Toaster
 import org.jetbrains.compose.web.ExperimentalComposeWebApi
+import org.jetbrains.compose.web.css.backgroundColor
+import org.jetbrains.compose.web.css.flexGrow
+import org.jetbrains.compose.web.css.height
+import org.jetbrains.compose.web.css.width
 import org.jetbrains.compose.web.renderComposable
 import org.kodein.di.instance
 
@@ -20,15 +27,31 @@ fun main() {
     val statisticsViewModel = DI.instance<StatisticsViewModel>()
     val gameViewModel = DI.instance<GameViewModel>()
 
+    makeResponsive()
+
     renderComposable(rootElementId = "root") {
-        if (screenSize() != ScreenSize.SMALL) Spacer()
+        val theme = appTheme.collectAsState().value
 
-        // TODO: Toggle Stats Screen
-        // TODO: Settings Screen
-        Game(gameViewModel)
-        Toaster(toasterViewModel)
-        Stats(statisticsViewModel)
+        val puzzleNo = gameViewModel.mysteryWord.collectAsState().value?.puzzleNumber ?: 0
 
-        if (screenSize() != ScreenSize.SMALL) Spacer()
+
+        VStack(attrs = {
+            style {
+                width(matchParent)
+                height(matchParent)
+                flexGrow(1)
+                backgroundColor(theme.backgroundColor)
+            }
+        }) {
+            Menu(
+                statsViewModel = statisticsViewModel,
+                puzzleNo = puzzleNo
+            )
+            // TODO: Settings Screen
+            GameScreen(gameViewModel)
+            Toaster(toasterViewModel)
+            Stats(statisticsViewModel)
+
+        }
     }
 }

@@ -69,7 +69,8 @@ private fun KodeInDI.MainBuilder.bindGame() {
             randomMysteryWord = instance(),
             saveGameStats = instance(),
             toaster = instance(),
-            statsViewModel = instance()
+            statsViewModel = instance(),
+            getGameStats = instance()
         )
     }
 }

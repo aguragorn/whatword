@@ -19,7 +19,7 @@ kotlin {
     sourceSets {
         val jvmMain by getting {
             dependencies {
-                implementation(project(":ui:common-ui"))
+                implementation(project(":ui:common-jetpack"))
                 implementation(compose.desktop.currentOs)
             }
         }

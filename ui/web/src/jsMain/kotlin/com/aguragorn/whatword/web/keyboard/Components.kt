@@ -9,7 +9,7 @@ import androidx.compose.runtime.remember
 import com.aguragorn.whatword.keyboard.model.Letter
 import com.aguragorn.whatword.keyboard.ui.KeyboardViewModel
 import com.aguragorn.whatword.web.app.VStack
-import com.aguragorn.whatword.web.app.matchParent
+import com.aguragorn.whatword.web.app.utils.matchParent
 import com.aguragorn.whatword.web.theme.appTheme
 import kotlinx.browser.window
 import org.jetbrains.compose.web.css.*

@@ -13,7 +13,7 @@ dependencies {
     implementation(project(":config"))
     implementation(project(":game"))
     implementation(project(":statistics"))
-    implementation(project(":ui:common-ui"))
+    implementation(project(":ui:common-jetpack"))
 
     implementation("androidx.activity:activity-compose:1.4.0")
 

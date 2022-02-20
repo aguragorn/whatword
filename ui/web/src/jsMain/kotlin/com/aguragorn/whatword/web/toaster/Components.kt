@@ -4,7 +4,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import com.aguragorn.whatword.toaster.ToasterViewModel
 import com.aguragorn.whatword.toaster.model.Message
-import com.aguragorn.whatword.web.app.*
+import com.aguragorn.whatword.web.app.Card
+import com.aguragorn.whatword.web.app.HStack
+import com.aguragorn.whatword.web.app.Spacer
+import com.aguragorn.whatword.web.app.VStack
+import com.aguragorn.whatword.web.app.utils.matchParent
+import com.aguragorn.whatword.web.app.utils.wrapContent
 import org.jetbrains.compose.web.css.*
 import org.jetbrains.compose.web.css.keywords.auto
 import org.jetbrains.compose.web.dom.Img
