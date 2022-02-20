@@ -24,8 +24,8 @@ fun getScreenSize(): ScreenSize {
     val width = window.innerWidth
     return when {
         width <= 480 -> ScreenSize.SMALL
-        width <= 600 -> ScreenSize.MEDIUM
-        width <= 960 -> ScreenSize.LARGE
+        width <= 840 -> ScreenSize.MEDIUM
+        width <= 1280 -> ScreenSize.LARGE
         else -> ScreenSize.XLARGE
     }
 }

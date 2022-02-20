@@ -16,7 +16,8 @@ data class Stats(
 ) {
     val isLastRoundWon: Boolean get() = currentStreak != 0L
     val hasPlayed: Boolean get() = gamesPlayed > 0.0
-    val winRate: Double = (wins.toDouble() / gamesPlayed.toDouble()) * 100.0
+    val winRate: Double
+        get() = gamesPlayed.takeIf { it > 0 }?.let { (wins.toDouble() / it.toDouble()) * 100.0 } ?: 0.0
 }
 
 @Serializable

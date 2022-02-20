@@ -71,7 +71,7 @@ fun OptionItem(
     action: () -> Unit = {}
 ) {
     val showOptionText by currentScreenSize
-        .map { it > ScreenSize.LARGE }
+        .map { it > ScreenSize.MEDIUM }
         .collectAsState(false)
 
     val optionItemStyle: StyleBuilder.() -> Unit = {
