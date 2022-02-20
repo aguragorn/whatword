@@ -1,7 +1,7 @@
-package com.aguragorn.whatword.statistics.storage.indexdb
+package com.aguragorn.whatword.indexdb
 
-import com.aguragorn.whatword.statistics.storage.indexdb.model.Entity
-import com.aguragorn.whatword.statistics.storage.indexdb.model.EntityMeta
+import com.aguragorn.whatword.indexdb.model.Entity
+import com.aguragorn.whatword.indexdb.model.EntityMeta
 import com.juul.indexeddb.Database
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.firstOrNull

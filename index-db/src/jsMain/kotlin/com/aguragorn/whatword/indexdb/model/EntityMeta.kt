@@ -1,4 +1,4 @@
-package com.aguragorn.whatword.statistics.storage.indexdb.model
+package com.aguragorn.whatword.indexdb.model
 
 external interface EntityMeta {
     val tableName: String

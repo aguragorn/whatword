@@ -1,11 +1,12 @@
 package com.aguragorn.whatword.statistics.storage.indexdb.model
 
 import com.aguragorn.whatword.config.model.GameConfig
+import com.aguragorn.whatword.indexdb.model.Entity
+import com.aguragorn.whatword.indexdb.model.EntityMeta
 import com.aguragorn.whatword.statistics.model.RoundsStat
 import com.aguragorn.whatword.statistics.model.Stats
 import com.aguragorn.whatword.statistics.storage.indexdb.toLongOrZero
 import com.benasher44.uuid.uuid4
-import com.juul.indexeddb.KeyPath
 import kotlinext.js.jso
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
@@ -43,8 +44,6 @@ object StatsEntityMeta : EntityMeta {
     override val tableName: String = "StatsEntity"
     override val identityField: String = id
 }
-
-val String.keyPath: KeyPath get() = KeyPath(this)
 
 // region Stats converter
 

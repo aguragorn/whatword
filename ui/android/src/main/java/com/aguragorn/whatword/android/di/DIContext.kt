@@ -1,7 +1,7 @@
 package com.aguragorn.whatword.android.di
 
 import android.content.Context
-import com.aguragorn.whatword.game.storage.MysteryWordDataStore
+import com.aguragorn.whatword.game.storage.MysteryWordStorage
 import com.aguragorn.whatword.game.ui.GameViewModel
 import com.aguragorn.whatword.game.usecase.RandomMysteryWord
 import com.aguragorn.whatword.statistics.storage.StatsDataStore
@@ -50,11 +50,11 @@ private fun KodeInDI.MainBuilder.bindStatistics() {
 }
 
 private fun KodeInDI.MainBuilder.bindMysteryWord() {
-    bindSingleton { MysteryWordDataStore() }
+    bindSingleton { MysteryWordStorage() }
 }
 
 private fun KodeInDI.MainBuilder.bindValidator() {
-    bindSingleton { ValidateWord(mysteryWordDataStore = instance()) }
+    bindSingleton { ValidateWord(mysteryWordStorage = instance()) }
 }
 
 private fun KodeInDI.MainBuilder.bindToaster() {
@@ -62,7 +62,7 @@ private fun KodeInDI.MainBuilder.bindToaster() {
 }
 
 private fun KodeInDI.MainBuilder.bindGame() {
-    bindSingleton { RandomMysteryWord(mysteryWordDataStore = instance()) }
+    bindSingleton { RandomMysteryWord(mysteryWordStorage = instance()) }
     bindSingleton {
         GameViewModel(
             validate = instance(),

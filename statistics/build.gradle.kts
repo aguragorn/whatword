@@ -72,8 +72,8 @@ kotlin {
 
         val jsMain by getting {
             dependencies {
+                implementation(project(":index-db"))
                 implementation("com.squareup.sqldelight:sqljs-driver:1.5.3")
-                implementation("com.juul.indexeddb:core:0.2.1")
             }
         }
     }

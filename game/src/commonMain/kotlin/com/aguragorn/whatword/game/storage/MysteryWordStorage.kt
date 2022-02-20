@@ -5,7 +5,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class MysteryWordDataStore : CoroutineScope {
+class MysteryWordStorage : CoroutineScope {
     override val coroutineContext = Dispatchers.Default
 
     private val words = """

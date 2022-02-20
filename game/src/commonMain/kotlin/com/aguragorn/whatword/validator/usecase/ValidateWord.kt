@@ -1,7 +1,7 @@
 package com.aguragorn.whatword.validator.usecase
 
 import com.aguragorn.whatword.config.model.GameConfig
-import com.aguragorn.whatword.game.storage.MysteryWordDataStore
+import com.aguragorn.whatword.game.storage.MysteryWordStorage
 import com.aguragorn.whatword.grid.model.Word
 import com.aguragorn.whatword.keyboard.model.Letter
 import com.aguragorn.whatword.validator.model.IncorrectLengthException
@@ -10,7 +10,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class ValidateWord(
-    private var mysteryWordDataStore: MysteryWordDataStore,
+    private var mysteryWordStorage: MysteryWordStorage,
 ) : CoroutineScope {
     override val coroutineContext = Dispatchers.Default
 
@@ -27,7 +27,7 @@ class ValidateWord(
         }
 
         val attemptStr = attempt.letters.joinToString(separator = "") { "${it.char}" }
-        val validWords = mysteryWordDataStore.getMysteryWords(gameConfig = config)
+        val validWords = mysteryWordStorage.getMysteryWords(gameConfig = config)
 
         if (attemptStr !in validWords) {
             throw IllegalArgumentException("$attemptStr is not a valid word.")

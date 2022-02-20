@@ -1,6 +1,8 @@
 package com.aguragorn.whatword.statistics.storage.indexdb
 
 import com.aguragorn.whatword.config.model.GameConfig
+import com.aguragorn.whatword.indexdb.DatabaseWrapper
+import com.aguragorn.whatword.indexdb.IndexDbFactory
 import com.aguragorn.whatword.statistics.model.Stats
 import com.aguragorn.whatword.statistics.storage.StatsDataStore
 import com.aguragorn.whatword.statistics.storage.indexdb.model.StatsEntity

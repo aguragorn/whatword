@@ -1,11 +1,12 @@
 package com.aguragorn.whatword.web.di
 
-import com.aguragorn.whatword.game.storage.MysteryWordDataStore
+import com.aguragorn.whatword.game.storage.MysteryWordStorage
 import com.aguragorn.whatword.game.ui.GameViewModel
 import com.aguragorn.whatword.game.usecase.RandomMysteryWord
+import com.aguragorn.whatword.indexdb.IndexDbFactory
 import com.aguragorn.whatword.statistics.storage.StatsDataStore
-import com.aguragorn.whatword.statistics.storage.indexdb.IndexDbFactory
 import com.aguragorn.whatword.statistics.storage.indexdb.IndexDbStatsDataStore
+import com.aguragorn.whatword.statistics.storage.indexdb.StatsDbUpgradeHelper
 import com.aguragorn.whatword.statistics.storage.sqldelight.DriverProvider
 import com.aguragorn.whatword.statistics.ui.StatisticsViewModel
 import com.aguragorn.whatword.statistics.usecase.GetGameStats
@@ -26,7 +27,7 @@ val DI: DirectDI = DI.direct {
 }
 
 private fun DI.MainBuilder.bindStatistics() {
-    bindSingleton { IndexDbFactory() }
+    bindSingleton { IndexDbFactory(upgradeHelper = StatsDbUpgradeHelper()) }
     bindSingleton { DriverProvider() }
     bindSingleton<StatsDataStore> { IndexDbStatsDataStore(instance()) }
 
@@ -37,11 +38,11 @@ private fun DI.MainBuilder.bindStatistics() {
 }
 
 private fun DI.MainBuilder.bindMysteryWord() {
-    bindSingleton { MysteryWordDataStore() }
+    bindSingleton { MysteryWordStorage() }
 }
 
 private fun DI.MainBuilder.bindValidator() {
-    bindSingleton { ValidateWord(mysteryWordDataStore = instance()) }
+    bindSingleton { ValidateWord(mysteryWordStorage = instance()) }
 }
 
 private fun DI.MainBuilder.bindToaster() {
@@ -49,7 +50,7 @@ private fun DI.MainBuilder.bindToaster() {
 }
 
 private fun DI.MainBuilder.bindGame() {
-    bindSingleton { RandomMysteryWord(mysteryWordDataStore = instance()) }
+    bindSingleton { RandomMysteryWord(mysteryWordStorage = instance()) }
     bindSingleton {
         GameViewModel(
             getGameStats = instance(),
