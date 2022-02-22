@@ -2,22 +2,22 @@ package com.aguragorn.whatword.statistics.storage.indexdb
 
 import com.aguragorn.whatword.indexdb.IndexDbUpgradeHelper
 import com.aguragorn.whatword.indexdb.createNonUniqueIndex
-import com.aguragorn.whatword.indexdb.model.EntityMeta
-import com.aguragorn.whatword.statistics.storage.indexdb.model.StatsEntity
+import com.aguragorn.whatword.indexdb.keyPath
 import com.aguragorn.whatword.statistics.storage.indexdb.model.StatsEntityMeta
 import com.juul.indexeddb.Database
-import com.juul.indexeddb.KeyPath
 import com.juul.indexeddb.VersionChangeTransaction
 
 class StatsDbUpgradeHelper : IndexDbUpgradeHelper {
+
+    override val databaseName: String = "StatisticsDB"
     override val currentVersion: Int = StatsDbUpgradeHelper.currentVersion
     override val onUpgrade = fun VersionChangeTransaction.(
-        database: Database, meta: EntityMeta, oldVersion: Int
+        database: Database, oldVersion: Int
     ) {
         if (oldVersion < v_1_0_0) {
             val store = database.createObjectStore(
-                meta.tableName,
-                KeyPath(StatsEntity::id.name)
+                StatsEntityMeta.tableName,
+                StatsEntityMeta.id.keyPath
             )
 
             createNonUniqueIndex(store, StatsEntityMeta.bestTimeMs)

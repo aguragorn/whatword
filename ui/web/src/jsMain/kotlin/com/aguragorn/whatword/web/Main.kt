@@ -47,7 +47,6 @@ fun main() {
                 statsViewModel = statisticsViewModel,
                 puzzleNo = puzzleNo
             )
-            // TODO: Settings Screen
             GameScreen(gameViewModel)
             Toaster(toasterViewModel)
             Stats(statisticsViewModel)

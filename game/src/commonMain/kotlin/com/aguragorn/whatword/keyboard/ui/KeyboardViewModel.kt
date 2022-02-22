@@ -36,8 +36,6 @@ class KeyboardViewModel(
             validatedKey.status = if (validatedKey.status.weight < newStatus.weight) newStatus else continue
         }
 
-        // TODO: Remember keys state
-
         // force subscribers of [keys] to be updated
         _keys.value = KeyLayout(validatedKeys)
     }

@@ -1,5 +1,6 @@
 package com.aguragorn.whatword.statistics.storage.indexdb
 
+import com.aguragorn.whatword.config.indexdb.model.toGameConfig
 import com.aguragorn.whatword.config.model.GameConfig
 import com.aguragorn.whatword.indexdb.DatabaseWrapper
 import com.aguragorn.whatword.indexdb.IndexDbFactory
@@ -41,7 +42,7 @@ class IndexDbStatsDataStore(
         gameConfig: GameConfig
     ): Stats? = withContext(coroutineContext) {
         return@withContext statsDB
-            .findOneOrNull { it.gameConfig.toDomain() == gameConfig }
+            .findOneOrNull { it.gameConfig.toGameConfig() == gameConfig }
             ?.toDomain()
     }
 }

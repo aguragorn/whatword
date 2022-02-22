@@ -9,14 +9,13 @@ class IndexDbFactory(
 ) {
 
     suspend fun <T : Entity> getDatabase(
-        databaseName: String = "default",
         meta: EntityMeta,
     ): DatabaseWrapper<T> = DatabaseWrapper(
         database = openDatabase(
-            name = databaseName,
+            name = upgradeHelper.databaseName,
             version = upgradeHelper.currentVersion
         ) { database, oldVersion, _ ->
-            upgradeHelper.onUpgrade(this, database, meta, oldVersion)
+            upgradeHelper.onUpgrade(this, database, oldVersion)
         },
         meta = meta
     )

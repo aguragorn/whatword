@@ -14,6 +14,7 @@ import com.aguragorn.whatword.statistics.usecase.GetGameStats
 import com.aguragorn.whatword.statistics.usecase.SaveGamesStats
 import com.aguragorn.whatword.toaster.ToasterViewModel
 import com.aguragorn.whatword.toaster.model.Message
+import com.aguragorn.whatword.utils.today
 import com.aguragorn.whatword.validator.usecase.ValidateWord
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -23,9 +24,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import kotlinx.datetime.Clock
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.todayAt
+import kotlinx.datetime.LocalDate
 import kotlin.coroutines.CoroutineContext
 import kotlin.time.Duration
 
@@ -53,14 +52,15 @@ class GameViewModel constructor(
 
     init {
         launch {
-            val today = if (!isPractice) Clock.System.todayAt(TimeZone.currentSystemDefault()) else null
+            val today = if (!isPractice) LocalDate.today() else null
 
             _mysteryWord.value = randomMysteryWord.invoke(
                 config = config,
                 date = today
             )
 
-            // TODO: play time
+            // TODO: load or create session
+
 
             keyboard.collectLatest { listenToEvents(it) }
         }
@@ -72,6 +72,8 @@ class GameViewModel constructor(
             Letter.enterChar -> performValidation()
             else -> grid.value.addLetterToGrid(letter)
         }
+
+        // TODO: update session
     }
 
     private suspend fun hasPlayed() = withContext(Dispatchers.Main) {
@@ -107,9 +109,6 @@ class GameViewModel constructor(
             } else {
                 grid.value.newWord()
             }
-
-            // TODO: Share game stats
-
         } catch (e: Throwable) {
             toaster.show(
                 Message(

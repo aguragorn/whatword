@@ -1,6 +1,8 @@
 package com.aguragorn.whatword.statistics.storage.indexdb.model
 
-import com.aguragorn.whatword.config.model.GameConfig
+import com.aguragorn.whatword.config.indexdb.model.GameConfigEntity
+import com.aguragorn.whatword.config.indexdb.model.toGameConfig
+import com.aguragorn.whatword.config.indexdb.model.toGameConfigEntity
 import com.aguragorn.whatword.indexdb.model.Entity
 import com.aguragorn.whatword.indexdb.model.EntityMeta
 import com.aguragorn.whatword.statistics.model.RoundsStat
@@ -22,12 +24,6 @@ external interface StatsEntity : Entity {
     var maxStreak: String
     var roundsStats: String
     var wins: String
-}
-
-external interface GameConfigEntity {
-    var language: String
-    var wordLength: String
-    var maxTurnCount: String
 }
 
 object StatsEntityMeta : EntityMeta {
@@ -54,7 +50,7 @@ fun Stats.toEntity(): StatsEntity {
         id = model.id ?: uuid4().toString()
         bestTimeMs = model.bestTimeMs.toString()
         currentStreak = model.currentStreak.toString()
-        gameConfig = model.gameConfig.toEntity()
+        gameConfig = model.gameConfig.toGameConfigEntity()
         gamesPlayed = model.gamesPlayed.toString()
         lastMysteryWord = model.lastMysteryWord
         maxStreak = model.bestStreak.toString()
@@ -66,33 +62,13 @@ fun Stats.toEntity(): StatsEntity {
 fun StatsEntity.toDomain(): Stats = Stats(
     id = id,
     gamesPlayed = gamesPlayed.toLongOrZero(),
-    gameConfig = gameConfig.toDomain(),
+    gameConfig = gameConfig.toGameConfig(),
     wins = wins.toLongOrZero(),
     currentStreak = currentStreak.toLongOrZero(),
     bestStreak = maxStreak.toLongOrZero(),
     bestTimeMs = bestTimeMs.toLongOrZero(),
     roundsStats = roundsStats.toDomain(),
     lastMysteryWord = lastMysteryWord,
-)
-
-// endregion
-
-// region GameConfig converter
-
-fun GameConfig.toEntity(): GameConfigEntity {
-    val model = this
-
-    return jso {
-        language = model.language
-        maxTurnCount = model.maxTurnCount.toString()
-        wordLength = model.wordLength.toString()
-    }
-}
-
-fun GameConfigEntity.toDomain(): GameConfig = GameConfig(
-    language = language,
-    wordLength = wordLength.toInt(),
-    maxTurnCount = maxTurnCount.toInt(),
 )
 
 // endregion
