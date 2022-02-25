@@ -3,14 +3,13 @@ package com.aguragorn.whatword.session.storage.indexdb.model
 import com.aguragorn.whatword.config.indexdb.model.GameConfigEntity
 import com.aguragorn.whatword.config.indexdb.model.toGameConfig
 import com.aguragorn.whatword.config.indexdb.model.toGameConfigEntity
-import com.aguragorn.whatword.game.storage.indexdb.model.MysteryWordEntity
-import com.aguragorn.whatword.game.storage.indexdb.model.toMysteryWord
-import com.aguragorn.whatword.game.storage.indexdb.model.toMysteryWordEntity
+import com.aguragorn.whatword.game.model.MysteryWord
 import com.aguragorn.whatword.indexdb.model.Entity
 import com.aguragorn.whatword.indexdb.model.EntityMeta
 import com.aguragorn.whatword.session.model.GameSession
 import com.aguragorn.whatword.session.model.GridState
 import com.aguragorn.whatword.session.model.KeyboardState
+import com.benasher44.uuid.uuid4
 import kotlinext.js.jso
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
@@ -23,7 +22,7 @@ external interface GameSessionEntity : Entity {
     var gameConfig: GameConfigEntity
     var gridState: GridStateEntity
     var keyboardState: KeyboardStateEntity
-    var mysteryWord: MysteryWordEntity
+    var mysteryWord: MysteryWord
 }
 
 object GameSessionEntityMeta : EntityMeta {
@@ -37,12 +36,14 @@ object GameSessionEntityMeta : EntityMeta {
     override val identityField: String = "id"
 }
 
-fun GameSession.toGameSessionEntity(): GameSessionEntity = jso {
-    id
-    gameConfig = this@toGameSessionEntity.gameConfig.toGameConfigEntity()
-    gridState = this@toGameSessionEntity.gridState.toGridStateEntity()
-    keyboardState = this@toGameSessionEntity.keyboardState.toKeyboardStateEntity()
-    mysteryWord = this@toGameSessionEntity.mysteryWord.toMysteryWordEntity()
+fun GameSession.toGameSessionEntity(): GameSessionEntity {
+    return jso {
+        id = this@toGameSessionEntity.id ?: uuid4().toString()
+        gameConfig = this@toGameSessionEntity.gameConfig.toGameConfigEntity()
+        gridState = this@toGameSessionEntity.gridState.toGridStateEntity()
+        keyboardState = this@toGameSessionEntity.keyboardState.toKeyboardStateEntity()
+        mysteryWord = this@toGameSessionEntity.mysteryWord
+    }
 }
 
 fun GameSessionEntity.toGamesSession(): GameSession = GameSession(
@@ -50,7 +51,7 @@ fun GameSessionEntity.toGamesSession(): GameSession = GameSession(
     gameConfig = gameConfig.toGameConfig(),
     gridState = gridState.toGridState(),
     keyboardState = keyboardState.toKeyboardState(),
-    mysteryWord = mysteryWord.toMysteryWord()
+    mysteryWord = mysteryWord
 )
 
 fun GridState.toGridStateEntity(): GridStateEntity = Json.Default.encodeToString(this)

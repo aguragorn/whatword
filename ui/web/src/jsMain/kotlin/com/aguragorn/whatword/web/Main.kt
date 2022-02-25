@@ -34,7 +34,6 @@ fun main() {
 
         val puzzleNo = gameViewModel.mysteryWord.collectAsState().value?.puzzleNumber ?: 0
 
-
         VStack(attrs = {
             style {
                 width(matchParent)

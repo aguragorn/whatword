@@ -5,13 +5,16 @@ package com.aguragorn.whatword.web.di
 import com.aguragorn.whatword.game.storage.MysteryWordStorage
 import com.aguragorn.whatword.game.ui.GameViewModel
 import com.aguragorn.whatword.game.usecase.RandomMysteryWord
-import com.aguragorn.whatword.indexdb.IndexDbFactory
-import com.aguragorn.whatword.indexdb.IndexDbUpgradeHelper
+import com.aguragorn.whatword.indexdb.DatabaseWrapper
 import com.aguragorn.whatword.session.storage.GameSessionStorage
 import com.aguragorn.whatword.session.storage.indexdb.IndexDbGameSessionStorage
+import com.aguragorn.whatword.session.storage.indexdb.model.GameSessionEntityMeta
+import com.aguragorn.whatword.session.usecase.GetGameSession
+import com.aguragorn.whatword.session.usecase.SaveGameSession
 import com.aguragorn.whatword.statistics.storage.StatsDataStore
 import com.aguragorn.whatword.statistics.storage.indexdb.IndexDbStatsDataStore
 import com.aguragorn.whatword.statistics.storage.indexdb.StatsDbUpgradeHelper
+import com.aguragorn.whatword.statistics.storage.indexdb.model.StatsEntityMeta
 import com.aguragorn.whatword.statistics.storage.sqldelight.DriverProvider
 import com.aguragorn.whatword.statistics.ui.StatisticsViewModel
 import com.aguragorn.whatword.statistics.usecase.GetGameStats
@@ -19,12 +22,12 @@ import com.aguragorn.whatword.statistics.usecase.SaveGamesStats
 import com.aguragorn.whatword.storage.indexdb.GameDbUpgradeHelper
 import com.aguragorn.whatword.toaster.ToasterViewModel
 import com.aguragorn.whatword.validator.usecase.ValidateWord
-import org.kodein.di.*
 import org.kodein.di.DI
-import org.kodein.di.DI.Companion.direct
+import org.kodein.di.DirectDI
+import org.kodein.di.bindSingleton
+import org.kodein.di.instance
 
 val DI: DirectDI = DI.direct {
-    bindStorage()
     bindStatistics()
     bindMysteryWord()
     bindValidator()
@@ -33,13 +36,13 @@ val DI: DirectDI = DI.direct {
     bindGame()
 }
 
-private fun DI.MainBuilder.bindStorage() {
-    bindFactory<IndexDbUpgradeHelper, IndexDbFactory> { IndexDbFactory(upgradeHelper = it) }
-}
-
 private fun DI.MainBuilder.bindStatistics() {
     bindSingleton { DriverProvider() }
-    bindSingleton<StatsDataStore> { IndexDbStatsDataStore(instance(StatsDbUpgradeHelper())) }
+    bindSingleton<StatsDataStore> {
+        IndexDbStatsDataStore(
+            DatabaseWrapper(StatsDbUpgradeHelper(), StatsEntityMeta)
+        )
+    }
 
     bindSingleton { SaveGamesStats(statsStore = instance()) }
     bindSingleton { GetGameStats(statsStore = instance()) }
@@ -60,7 +63,14 @@ private fun DI.MainBuilder.bindToaster() {
 }
 
 private fun DI.MainBuilder.bindSession() {
-    bindSingleton<GameSessionStorage> { IndexDbGameSessionStorage(instance(GameDbUpgradeHelper)) }
+    bindSingleton<GameSessionStorage> {
+        IndexDbGameSessionStorage(
+            DatabaseWrapper(GameDbUpgradeHelper(), GameSessionEntityMeta)
+        )
+    }
+    bindSingleton { GetGameSession(gameSessionStore = instance()) }
+    bindSingleton { SaveGameSession(gameSessionStore = instance()) }
+
 }
 
 private fun DI.MainBuilder.bindGame() {
@@ -68,8 +78,10 @@ private fun DI.MainBuilder.bindGame() {
     bindSingleton {
         GameViewModel(
             getGameStats = instance(),
+            getSession = instance(),
             randomMysteryWord = instance(),
             saveGameStats = instance(),
+            saveSession = instance(),
             statsViewModel = instance(),
             toaster = instance(),
             validate = instance(),

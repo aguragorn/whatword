@@ -4,14 +4,19 @@ import com.aguragorn.whatword.game.model.MysteryWord
 import com.aguragorn.whatword.indexdb.model.Entity
 import kotlinext.js.jso
 
-interface MysteryWordEntity : Entity {
-    var puzzleNumber: Int
-    var word: String
+open class MysteryWordEntity : Entity {
+    override var id: String? = null
+    open var puzzleNumber: Int = 0
+    open var word: String = ""
 }
 
-fun MysteryWord.toMysteryWordEntity(): MysteryWordEntity = jso {
-    puzzleNumber = this@toMysteryWordEntity.puzzleNumber
-    word = this@toMysteryWordEntity.word
+fun MysteryWord.toMysteryWordEntity(): MysteryWordEntity {
+    val model = this
+
+    return jso {
+        puzzleNumber = model.puzzleNumber
+        word = model.word
+    }
 }
 
 fun MysteryWordEntity.toMysteryWord(): MysteryWord = MysteryWord(

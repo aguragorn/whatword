@@ -9,6 +9,9 @@ import com.aguragorn.whatword.keyboard.model.KeyLayout
 import com.aguragorn.whatword.keyboard.model.Letter
 import com.aguragorn.whatword.keyboard.model.QwertyLayout
 import com.aguragorn.whatword.keyboard.ui.KeyboardViewModel
+import com.aguragorn.whatword.session.model.GameSession
+import com.aguragorn.whatword.session.usecase.GetGameSession
+import com.aguragorn.whatword.session.usecase.SaveGameSession
 import com.aguragorn.whatword.statistics.ui.StatisticsViewModel
 import com.aguragorn.whatword.statistics.usecase.GetGameStats
 import com.aguragorn.whatword.statistics.usecase.SaveGamesStats
@@ -21,7 +24,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.datetime.LocalDate
@@ -31,10 +33,12 @@ import kotlin.time.Duration
 class GameViewModel constructor(
     private val config: GameConfig = GameConfig.default,
     private val getGameStats: GetGameStats,
+    private val getSession: GetGameSession,
     private val isPractice: Boolean = false,
     keyLayout: KeyLayout = QwertyLayout(),
     private val randomMysteryWord: RandomMysteryWord,
     private val saveGameStats: SaveGamesStats,
+    private val saveSession: SaveGameSession,
     private val statsViewModel: StatisticsViewModel,
     private val toaster: ToasterViewModel,
     private val validate: ValidateWord,
@@ -50,30 +54,62 @@ class GameViewModel constructor(
     private val _mysteryWord = MutableStateFlow<MysteryWord?>(null)
     val mysteryWord: StateFlow<MysteryWord?> = _mysteryWord.asStateFlow()
 
+    private var session: GameSession? = null
+
     init {
         launch {
-            val today = if (!isPractice) LocalDate.today() else null
+            val today = LocalDate.today()
 
-            _mysteryWord.value = randomMysteryWord.invoke(
-                config = config,
-                date = today
-            )
+            _mysteryWord.value = if (!isPractice) {
+                randomMysteryWord.invoke(config = config, date = today)
+            } else {
+                randomMysteryWord.invoke(config = config)
+            }
 
-            // TODO: load or create session
+            launch { keyboard.collect { listenToEvents(it) } }
 
+            if (!isPractice) {
+                loadOrCreateSession(config = config, date = today)
+            }
 
-            keyboard.collectLatest { listenToEvents(it) }
         }
     }
 
-    private fun onLetterTapped(letter: Letter) {
+    private suspend fun loadOrCreateSession(config: GameConfig, date: LocalDate) {
+        session = getSession.invoke(gameConfig = config, date = date)
+
+        session?.also { session ->
+            if (session.isStub) {
+                updateSession()
+
+            } else {
+                _grid.value.load(session.gridState)
+                _keyboard.value.updateKeys(session.keyboardState)
+            }
+        }
+    }
+
+    private suspend fun updateSession() {
+        val session = session ?: return
+
+        session.gridState = _grid.value.words.value
+        session.keyboardState = _keyboard.value.keys.value.letters.flatten()
+
+        _mysteryWord.value?.let {
+            session.mysteryWord = it
+        }
+
+        saveSession.invoke(session)
+    }
+
+    private suspend fun onLetterTapped(letter: Letter) {
         when (letter.char) {
             Letter.deleteChar -> grid.value.deleteLastLetter()
             Letter.enterChar -> performValidation()
             else -> grid.value.addLetterToGrid(letter)
         }
 
-        // TODO: update session
+        updateSession()
     }
 
     private suspend fun hasPlayed() = withContext(Dispatchers.Main) {
@@ -109,6 +145,8 @@ class GameViewModel constructor(
             } else {
                 grid.value.newWord()
             }
+
+            updateSession()
         } catch (e: Throwable) {
             toaster.show(
                 Message(

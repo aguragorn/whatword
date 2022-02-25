@@ -65,12 +65,14 @@ private fun KodeInDI.MainBuilder.bindGame() {
     bindSingleton { RandomMysteryWord(mysteryWordStorage = instance()) }
     bindSingleton {
         GameViewModel(
-            validate = instance(),
+            getGameStats = instance(),
+            getSession = instance(),
             randomMysteryWord = instance(),
             saveGameStats = instance(),
-            toaster = instance(),
+            saveSession = instance(),
             statsViewModel = instance(),
-            getGameStats = instance()
+            toaster = instance(),
+            validate = instance(),
         )
     }
 }
