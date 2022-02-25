@@ -3,8 +3,8 @@ package com.aguragorn.whatword.game.usecase
 import com.aguragorn.whatword.config.model.GameConfig
 import com.aguragorn.whatword.game.model.MysteryWord
 import com.aguragorn.whatword.game.storage.MysteryWordStorage
+import com.aguragorn.whatword.game.utils.asPuzzleNumber
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.minus
 
 class RandomMysteryWord(
     private val mysteryWordStorage: MysteryWordStorage
@@ -19,8 +19,7 @@ class RandomMysteryWord(
             return MysteryWord(0, mysteryWords.random())
         }
 
-        val dayZero = LocalDate(2022, 2, 15)
-        val puzzleNumber = date.minus(dayZero).days
+        val puzzleNumber = date.asPuzzleNumber()
         val word = mysteryWords[puzzleNumber % mysteryWords.size]
 
         return MysteryWord(puzzleNumber, word)

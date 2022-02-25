@@ -34,7 +34,6 @@ fun main() {
 
         val puzzleNo = gameViewModel.mysteryWord.collectAsState().value?.puzzleNumber ?: 0
 
-
         VStack(attrs = {
             style {
                 width(matchParent)
@@ -47,7 +46,6 @@ fun main() {
                 statsViewModel = statisticsViewModel,
                 puzzleNo = puzzleNo
             )
-            // TODO: Settings Screen
             GameScreen(gameViewModel)
             Toaster(toasterViewModel)
             Stats(statisticsViewModel)

@@ -2,6 +2,7 @@ package com.aguragorn.whatword.grid.ui
 
 import com.aguragorn.whatword.grid.model.Word
 import com.aguragorn.whatword.keyboard.model.Letter
+import com.aguragorn.whatword.session.model.GridState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -50,6 +51,10 @@ class GridViewModel(
             letter.status = validatedLetters[i].status
         }
 
+        updateWords(words)
+    }
+
+    fun load(words: GridState) {
         updateWords(words)
     }
 }

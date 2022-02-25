@@ -2,6 +2,7 @@ import com.aguragorn.Versions
 
 plugins {
     kotlin("multiplatform")
+    kotlin("plugin.serialization") version "1.6.10"
     id("com.android.library")
     id("com.aguragorn.androidconfig")
     id("com.aguragorn.optins")
@@ -37,6 +38,7 @@ kotlin {
 
                 implementation(kotlin("stdlib-common"))
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.kotlin_coroutines}")
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:${Versions.kotlin_serialization_json}")
             }
         }
         val commonTest by getting {
@@ -51,6 +53,10 @@ kotlin {
 
         val desktopMain by getting
 
-        val jsMain by getting
+        val jsMain by getting {
+            dependencies {
+                implementation(project(":index-db"))
+            }
+        }
     }
 }

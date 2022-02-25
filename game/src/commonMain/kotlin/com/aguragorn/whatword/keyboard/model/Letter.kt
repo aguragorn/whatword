@@ -1,5 +1,8 @@
 package com.aguragorn.whatword.keyboard.model
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class Letter(
     val char: Char,
     var status: Status = Status.UNKNOWN,

@@ -5774,7 +5774,6 @@ class MysteryWordStorage : CoroutineScope {
     suspend fun getMysteryWords(
         gameConfig: GameConfig
     ): List<String> = withContext(coroutineContext) {
-        // TODO: consider gameConfig
         return@withContext words
     }
 
